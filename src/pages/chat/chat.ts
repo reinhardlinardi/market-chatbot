@@ -20,4 +20,7 @@ export class ChatPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
+  sendMessage() {
+  }
+
 }

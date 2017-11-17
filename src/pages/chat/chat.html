@@ -24,7 +24,7 @@
         <input type="text" class="input-text">
       </ion-col>
       <ion-col col-2 class="button-container">
-        <button ion-button class="send-button" block>
+        <button ion-button class="send-button" block (mousedown)="sendMessage(); $event.preventDefault();">
           <ion-icon name="send"></ion-icon>
         </button>
       </ion-col>

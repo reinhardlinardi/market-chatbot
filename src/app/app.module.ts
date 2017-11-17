@@ -24,7 +24,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     IonicModule.forRoot(App, {
       platforms: { 
         android: { 
-          activator: 'none'
+          activator: 'none' // turn off animation on click
         } 
       }
     }),
