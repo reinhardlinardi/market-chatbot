@@ -1,12 +1,38 @@
 page-chat {
-    .chat-tools {
+    .footer-container {
         height: 45px;
+        padding: 0;
+    }
+
+    .footer-container::before {
+        content: none;
+    }
+
+    .chat-container {
+        padding-left: 15px;
+        box-shadow: 0px 1px 3px gray inset;
     }
 
     .input-text {
-        border: none;
-        font-size: 16px;
         height: 100%;
         width: 100%;
+        border: none;
+        margin-top: 5px;
+        font-size: 16px;
+    }
+
+    .button-container {
+        height: 100%;
+        width: 100%;
+        padding: 0;
+    }
+
+    .send-button {
+        height: 100%;
+        width: 100%;
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
     }
 }
