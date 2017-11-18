@@ -46,7 +46,11 @@ page-chat {
         font-size: 16px;
         text-align: left;
     }
-
+    
+    .chat-content {
+        white-space: pre-wrap;
+    }
+    
     .footer-container {
         height: 50px;
         width: 100%;

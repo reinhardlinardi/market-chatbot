@@ -18,7 +18,7 @@
     <ion-content #scrollable class="chat-space">
       <div *ngFor="let item of items" class="{{ item.container }}"> <!-- For all items -->
         <div class="{{ item.type }}">
-          {{ item.chat }}
+          <span class="chat-content">{{ item.chat }}</span>
         </div>
       </div>
     </ion-content>
