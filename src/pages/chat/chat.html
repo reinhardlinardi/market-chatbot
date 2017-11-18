@@ -15,7 +15,13 @@
 
 <ion-content>
   <div class="chat-space">
-
+    <ion-scroll scrollY="true" class="scroll-space">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis mi in odio convallis faucibus. Integer et dolor at lectus laoreet dapibus. Vivamus at sapien at ipsum sodales cursus sit amet sit amet mi. Sed ut tortor consequat, tincidunt nulla a, tempor leo. Proin rutrum ultricies urna eget finibus. Phasellus scelerisque ipsum vel ex aliquet, id vestibulum ex dapibus. Maecenas eleifend scelerisque diam eu iaculis.
+        
+        Vivamus et consectetur lorem. Maecenas vestibulum at nunc id malesuada. Cras ac blandit nulla, id bibendum erat. Suspendisse accumsan tristique lectus, sit amet molestie dui molestie sed. Phasellus efficitur malesuada purus eu pellentesque. Quisque eget tristique nibh. Fusce a ex cursus, commodo ex sit amet, aliquam odio. Suspendisse ornare purus ac semper varius. Donec justo erat, aliquet in lacinia sed, mattis vel lectus. Sed eget fringilla leo, nec vestibulum mi. Ut mi risus, posuere at nisi eget, rhoncus consequat nibh. Donec vitae dictum ante. Phasellus iaculis, ante eu eleifend euismod, lorem felis vulputate leo, sit amet suscipit magna erat eu orci. Nullam quis consectetur metus, eu dignissim sem.
+        
+        Praesent accumsan, purus vel pellentesque ultricies, ex tellus pretium justo, ac faucibus risus eros sit amet mi. Etiam aliquam nisl in eros viverra pellentesque vitae sit amet ipsum. Proin pulvinar lectus molestie lectus tempus, sed gravida orci blandit. Donec sit amet arcu dictum, malesuada lorem interdum, lobortis dui. Vivamus cursus, ipsum nec vestibulum rutrum, quam enim cursus magna, in semper dolor felis et justo. Suspendisse in sollicitudin tortor, eget pulvinar est. Nunc nec fermentum leo. Cras vel placerat metus, hendrerit dignissim nisl. Aliquam a blandit ex. Proin lobortis elit mauris, quis placerat nunc sagittis in. Aliquam facilisis diam augue, nec vestibulum tortor placerat quis. In eu quam nec mauris tristique laoreet maximus vel turpis. Vivamus ullamcorper ligula vitae quam molestie, vehicula pretium justo consequat. Morbi eros dolor, fringilla ut ornare a, lobortis quis mi. Sed vulputate erat purus, ut maximus sem ullamcorper vitae. Vestibulum nec ipsum tellus.  
+    </ion-scroll>
   </div>
 </ion-content>
 
@@ -26,7 +32,7 @@
         <input type="text" class="input-text">
       </ion-col>
       <ion-col col-2 class="button-container">
-        <button ion-button class="send-button" block (mousedown)="sendMessage(); $event.preventDefault();">
+        <button ion-button class="send-button" block (mousedown)="sendMessage(); event.preventDefault();"> <!-- prevent keyboard close when click button -->
           <ion-icon name="send"></ion-icon>
         </button>
       </ion-col>
