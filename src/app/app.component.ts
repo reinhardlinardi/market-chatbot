@@ -2,10 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 
 import { Platform, MenuController, Nav } from 'ionic-angular';
 
-/*
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
-import { ListPage } from '../pages/list/list';
-*/
 import { ChatPage } from '../pages/chat/chat';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -18,10 +14,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 export class App {
   @ViewChild(Nav) nav: Nav;
-  /*
-  // make HelloIonicPage the root (or first) page
-  rootPage = HelloIonicPage;
-  */
 
   // make ChatPage the root (or first) page
   rootPage = ChatPage;

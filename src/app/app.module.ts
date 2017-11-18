@@ -3,9 +3,6 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { App } from './app.component';
 
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
-import { ItemDetailsPage } from '../pages/item-details/item-details';
-import { ListPage } from '../pages/list/list';
 import { ChatPage } from '../pages/chat/chat';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -15,13 +12,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   declarations: [
     App,
     ChatPage,
-    HelloIonicPage,
-    ItemDetailsPage,
-    ListPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(App, {
+      /* Configurations */
       platforms: { 
         android: { 
           activator: 'none' // turn off animation on click
@@ -32,10 +27,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   bootstrap: [IonicApp],
   entryComponents: [
     App,
-    ChatPage,
-    HelloIonicPage,
-    ItemDetailsPage,
-    ListPage
+    ChatPage
   ],
   providers: [
     StatusBar,
