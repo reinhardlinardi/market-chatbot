@@ -9,34 +9,47 @@ page-chat {
         width: 100%;
         background: #91d3f2;
     }
-    
-    .chatbox-container {
+
+    .chatbox-container-user {
         position: relative;
-        height: 60px;
+        text-align: right;
+    }
+
+    .chatbox-container-bot {
+        position: relative;
+        text-align: left;
     }
 
     .chatbox-bot {
-        position : absolute;
-        left : 10px;
-        top : 10px;
+        position: relative;
+        display: inline-block;
+        left: 10px;
+        top: 10px;
         min-width: 20%;
-        max-width: 85%;
-        background : cyan;
+        max-width: 80%;
+        background : #f7ff8c;
         border-radius: 5px;
         padding: 5px 5px 5px 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
         font-size: 16px;
     }
 
     .chatbox-user {
-        position : absolute;
-        right : 10px;
-        top : 10px;
+        position: relative;
+        display: inline-block;
+        margin-left: auto;
+        right: 10px;
+        top: 10px;
         min-width: 20%;
-        max-width: 85%;
-        background : bisque;
+        max-width: 80%;
+        background : #54ffba;
         border-radius: 5px;
         padding: 5px 5px 5px 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
         font-size: 16px;
+        text-align: left;
     }
 
     .footer-container {
