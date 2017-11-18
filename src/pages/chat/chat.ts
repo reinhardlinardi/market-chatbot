@@ -9,6 +9,11 @@ import { NavController, NavParams } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
+/* Create model to be passed to view */
+class Command {
+  val: string;
+}
+
 //@IonicPage()
 @Component({
   selector: 'page-chat',
@@ -17,10 +22,15 @@ import { NavController, NavParams } from 'ionic-angular';
 
 export class ChatPage {
 
+  /* Properties */
+  command: Command; // Add model as property of class
+
+  /* Methods */
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.command = new Command(); // Create new instance of model in Constructor
   }
 
-  sendMessage() {
+  runCommand(command : Command) {
+    alert('Command : ' + command.val);
   }
-
 }
