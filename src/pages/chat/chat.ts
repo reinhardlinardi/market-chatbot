@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 /* import { IonicPage, NavController, NavParams } from 'ionic-angular'; */
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Content } from 'ionic-angular';
 
 /**
  * Generated class for the ChatPage page.
@@ -22,6 +22,7 @@ class Command {
 })
 
 export class ChatPage {
+  @ViewChild('scrollable') content: Content; // get view DOM matching tag #scrollable
 
   /* Properties */
   command: Command; // Add model as property of class
@@ -43,9 +44,13 @@ export class ChatPage {
     
     // If command.val is not falsy
     if(command.val) {
-      // do something
       this.items.push({ container: "chatbox-container-user", type: "chatbox-user", chat: command.val});
       command.val = ""; // reset text
+
+      // Scroll to latest chat
+      this.content.scrollTo(0, this.content.scrollHeight); // scroll to bottom of content
+
+      // Bot action
     }
   }
 }

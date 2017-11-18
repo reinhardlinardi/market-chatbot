@@ -15,13 +15,13 @@
 
 <ion-content>
   <div class="chat-space">
-    <ion-scroll scrollY="true" class="scroll-space">
+    <ion-content #scrollable class="chat-space">
       <div *ngFor="let item of items" class="{{ item.container }}"> <!-- For all items -->
         <div class="{{ item.type }}">
           {{ item.chat }}
         </div>
       </div>
-    </ion-scroll>
+    </ion-content>
   </div>
 </ion-content>
 
