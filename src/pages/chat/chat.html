@@ -16,16 +16,36 @@
 <ion-content>
   <div class="chat-space">
     <ion-scroll scrollY="true" class="scroll-space">
-        
+        <div class="chatbox-container">
+          <div class="chatbox-bot">
+              Hi, may I help you?
+          </div>
+        </div>
+        <div class="chatbox-container">
+          <div class="chatbox-user">
+            Yes. I would like to buy a Mac book.
+          </div>
+        </div>
+        <div class="chatbox-container">
+          <div class="chatbox-bot">
+              1
+          </div>
+        </div>
+        <div class="chatbox-container">
+          <div class="chatbox-user">
+            2
+          </div>
+        </div>
     </ion-scroll>
   </div>
 </ion-content>
+
 
 <ion-footer class="footer-container">
   <ion-grid class="footer-container">
     <ion-row class="footer-container">
       <ion-col col-10 class="chat-container">
-        <input type="text" class="input-text" placeholder="Enter command here" [(ngModel)]="command.val"> <!-- Use two-way data binding to update Model -->
+        <input type="text" class="input-text" maxlength="50" placeholder="Enter command here" [(ngModel)]="command.val"> <!-- Use two-way data binding to update Model -->
       </ion-col>
       <ion-col col-2 class="button-container">
         <button ion-button class="send-button" block (mousedown)="runCommand(command); $event.preventDefault()"> <!-- Prevent keyboard hides when button clicked -->

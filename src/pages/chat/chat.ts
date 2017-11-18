@@ -31,6 +31,10 @@ export class ChatPage {
   }
 
   runCommand(command : Command) {
-    alert('Command : ' + command.val);
+    
+    // If command.val is not falsy
+    if(command.val) {
+      alert('Command : ' + command.val);
+    }
   }
 }
