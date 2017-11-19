@@ -58,14 +58,28 @@
             <!-- If content is list of items -->
             <ng-container *ngIf="chatbox.data=='item'">
               <!-- If any -->
-              <ng-container *ngIf="item_detail[chatbox.key].length">
+              <ng-container *ngIf="all_item.length">
+                <!-- For all items -->
+                <ng-container *ngFor="let detail of all_item; let idx=index">
+                  <div class="chat-content">{{ idx+1 }}. Merk: {{ detail['brand'] }}<br/>    Harga: Rp {{ detail['price'] }}</div>
+                </ng-container>
+              </ng-container>
+              <!-- If nothing -->
+              <ng-container *ngIf="!all_item.length">
+                <div class="chat-content">Tidak ada.</div>
+              </ng-container>
+            </ng-container>
+            <!-- If content is cart -->
+            <ng-container *ngIf="chatbox.data=='cart'">
+              <!-- If any -->
+              <ng-container *ngIf="cart.length">
                 <!-- For all items -->
                 <ng-container *ngFor="let detail of item_detail[chatbox.key]; let idx=index">
                   <div class="chat-content">{{ idx+1 }}. Merk: {{ detail['brand'] }}<br/>    Harga: Rp {{ detail['price'] }}</div>
                 </ng-container>
               </ng-container>
               <!-- If nothing -->
-              <ng-container *ngIf="!item_detail[chatbox.key].length">
+              <ng-container *ngIf="!cart.length">
                 <div class="chat-content">Tidak ada.</div>
               </ng-container>
             </ng-container>

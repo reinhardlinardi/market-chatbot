@@ -32,20 +32,28 @@ export class ChatPage {
 
   public address: string[] = []; // Array of address
   public method: string[] = []; // Array of payment methods
-  public item_name : string[] = ['kamera']; // Array of item name
-  public item_detail: any = // Array of item detail
-  {
-    kamera: [
-      {
-        brand: 'Canon',
-        price: 3000000
-      },
-      {
-        brand: 'Sony',
-        price: 2500000
-      }
-    ]
-  }; 
+  
+  public cart: any[] = []; // Cart
+  public all_item: any[] = []; // Array of all searched item
+  current_item: string = ""; // Current searched item
+  
+  public item: any = // Array of item
+  [
+    {
+      id: 1,
+      keyword: 'kamera',
+      name : 'Kamera',
+      brand: 'Canon',
+      price: 3000000
+    },
+    {
+      id: 2,
+      keyword: 'kamera',
+      name: 'Kamera',
+      brand: 'Sony',
+      price: 2500000
+    }
+  ]; 
   
   /* Constants */
   greeting: string = "Halo! Selamat datang! Saya adalah chatbot yang dapat membantu kamu berbelanja. Ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
@@ -86,6 +94,8 @@ export class ChatPage {
                             + "Contoh penggunaan perintah sebagai berikut :\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
                             + "<b>Hapus :</b> <u>Hapus</u>\n";
+  cart_header: string = "-- Keranjang --\n\nKeranjang Anda :\n\n";
+  cart_footer: string = "";
 
   error: string = "Perintah yang anda masukkan salah. Silahkan coba lagi atau ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
 
@@ -174,21 +184,34 @@ export class ChatPage {
     }
     else if(match_cari != null) // Cari
     {
+      this.stack = [];
+      this.stack.push("cari");
+
       let item:string = match_cari[1].toLowerCase();
-      let idx = this.item_name.indexOf(item);
+      this.all_item = this.getAllItem(item);
 
-      if(idx > -1) { // If any
-        let detail = this.item_detail[item];
-
+      if(this.all_item.length) { // If any
+        this.current_item = item;        
+        let detail = this.item[item];
+        
         this.chatboxes.push({
           container: "chatbox-container-bot", type: "chatbox-bot", 
           content: "list", header: this.item_header, footer: this.item_footer, data: "item", key: item
         })
       }
-      else this.chatboxes.push({ // If nothing
+      else {
+        this.current_item = "";
+        this.chatboxes.push({ // If nothing
+          container: "chatbox-container-bot", type: "chatbox-bot", 
+          content: "text", data: "Maaf, barang yang Anda cari tidak ditemukan."
+        });
+      }
+    }
+    else if(match_keranjang != null) {
+      this.chatboxes.push({
         container: "chatbox-container-bot", type: "chatbox-bot", 
-        content: "text", data: "Maaf, barang yang Anda cari tidak ditemukan."
-      });
+        content: "list", header: this.cart_header, footer: this.cart_footer, data: "cart"
+      })
     }
     else if(match_tambah != null) // Tambah
     {
@@ -201,6 +224,13 @@ export class ChatPage {
         else this.chatboxes.push({ 
           container: "chatbox-container-bot", type: "chatbox-bot", 
           content: "text", data: "Semua metode pembayaran sudah terdaftar." 
+        });
+      }
+      else if(prev_command == "cari") {
+        if(this.getAvailableItem(this.current_item).length) this.addItem(this.current_item);
+        else this.chatboxes.push({ 
+          container: "chatbox-container-bot", type: "chatbox-bot", 
+          content: "text", data: "Semua barang sudah dimasukkan ke keranjang." 
         });
       }
       else this.chatboxes.push({ 
@@ -335,6 +365,8 @@ export class ChatPage {
     alert.present();
   }
 
+
+  /* Method */
   getAvailableMethod() {
     let all: any[] = ['Transfer', 'Kartu Kredit'];
     let missing: any[] = [];
@@ -347,7 +379,6 @@ export class ChatPage {
     return missing;
   }
 
-  /* Method */
   addMethod() {
     let alert = this.alertCtrl.create({
       title: 'Tambah Metode Pembayaran',
@@ -414,6 +445,57 @@ export class ChatPage {
             else this.chatboxes.push({ // If nothing
               container: "chatbox-container-bot", type: "chatbox-bot", 
               content: "text", data: "Tidak ada metode pembayaran yang dipilih." 
+            });
+
+            this.content.resize(); // Recalculate content dimensions
+            if(this.content.scrollHeight > this.content.contentHeight) this.content.scrollTo(0, this.content.scrollHeight); // Scroll to user's latest chat if content has a scroll
+          }
+        }
+      ]
+    });
+
+    alert.present();
+  }
+
+
+  /* Items */
+  getAllItem(key: string) {
+    return this.item.filter(x => x['keyword'] == key);
+  }
+
+  getAvailableItem(key: string) {
+    let all: any[] = this.item.filter(x => x['keyword'] == key);
+    let missing: any[] = [];
+    let length = all.length;
+
+    for(let cnt=0; cnt<length; cnt++) {
+      if(this.cart.indexOf(all[cnt]['id']) == -1) missing.push({ type: 'checkbox', value: all[cnt]['id'], label: all[cnt]['brand'] + ", Rp " + all[cnt]['price'] });
+    }
+    
+    return missing;
+  }
+
+  addItem(key: string) {
+    let alert = this.alertCtrl.create({
+      title: 'Tambah Ke Keranjang',
+      inputs: this.getAvailableItem(key),
+      buttons: [{
+          text: 'Batal',
+          role: 'cancel'
+        },
+        {
+          text: 'Tambah',
+          handler: data => {
+            
+            for(let option of data) this.cart.push(this.item[key][option]['id']);
+
+            if(data.length) this.chatboxes.push({ // If any
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Barang berhasil ditambahkan ke keranjang."
+            });
+            else this.chatboxes.push({ // If nothing
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Tidak ada barang yang dipilih."
             });
 
             this.content.resize(); // Recalculate content dimensions
