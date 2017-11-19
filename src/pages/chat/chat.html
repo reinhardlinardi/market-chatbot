@@ -16,9 +16,9 @@
 <ion-content>
   <div class="chat-space">
     <ion-content #scrollable class="chat-space">
-      <div *ngFor="let item of items" class="{{ item.container }}"> <!-- For all items -->
-        <div class="{{ item.type }}">
-          <span class="chat-content">{{ item.chat }}</span>
+      <div *ngFor="let chatbox of chatboxes" class="{{ chatbox.container }}"> <!-- For all items -->
+        <div class="{{ chatbox.type }}">
+          <span class="chat-content" [innerHTML]="chatbox.chat"></span>
         </div>
       </div>
     </ion-content>
