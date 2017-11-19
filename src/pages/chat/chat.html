@@ -22,13 +22,18 @@
             <span class="chat-content" [innerHTML]="chatbox.data"></span>
           </ng-container>
           <ng-container *ngIf="chatbox.content=='list'">
-              <span class="chat-content" [innerHTML]="chatbox.header"></span>
-              <ng-container *ngIf="chatbox.data=='address'">
+            <span class="chat-content" [innerHTML]="chatbox.header"></span>
+            <ng-container *ngIf="chatbox.data=='address'">
+              <ng-container *ngIf="address.length">
                 <ng-container *ngFor="let addr of address; let idx=index">
                   <div class="chat-content">{{ idx+1 }}. {{ addr }}</div>
                 </ng-container>
               </ng-container>
-              <span class="chat-content" [innerHTML]="chatbox.footer"></span>            
+              <ng-container *ngIf="!address.length">
+                <div class="chat-content">Tidak ada.</div>
+              </ng-container>
+            </ng-container>    
+            <span class="chat-content" [innerHTML]="chatbox.footer"></span>
           </ng-container>
         </div>
       </div>
