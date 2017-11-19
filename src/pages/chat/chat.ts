@@ -108,7 +108,7 @@ export class ChatPage {
 
     // Decide response
     if(match_batal != null) {
-      this.stack = [];
+      //this.stack = [];
       // set match_something = true
     }
 
@@ -124,11 +124,20 @@ export class ChatPage {
       if(prev_command == "alamat") this.addAddress();
       else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada data yang dapat ditambahkan." });
     }
+    else if(match_hapus != null) {
+      let prev_command: string = this.stack[this.stack.length - 1];
+      
+      if(prev_command == "alamat") {
+        if(this.address.length) this.removeAddress();
+        else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada alamat kirim yang terdaftar." }); 
+      }
+      else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada data yang dapat dihapus." });
+    }
     else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: this.error });
   }
 
   newValidAddress(new_address: string) {
-    return !(this.address.indexOf(new_address) > -1) && (new_address != "");
+    return !(this.address.indexOf(new_address) > -1);
   }
 
   addAddress() {
@@ -145,10 +154,58 @@ export class ChatPage {
         {
           text: 'Tambah',
           handler: data => {
-            if(this.newValidAddress(data.address)) {
-              this.address.push(data.address);
-              this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat berhasil ditambahkan." });
-            } else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat sudah terdaftar. Tidak ada alamat baru yang ditambahkan pada daftar alamat kirim." });
+
+            if(data.address == "") this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat kosong." });
+            else {
+              if(this.newValidAddress(data.address)) {
+                this.address.push(data.address);
+                this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat berhasil ditambahkan." });
+              } else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat sudah terdaftar." });
+            }
+
+            this.content.resize(); // Recalculate content dimensions
+            if(this.content.scrollHeight > this.content.contentHeight) this.content.scrollTo(0, this.content.scrollHeight); // Scroll to user's latest chat if content has a scroll
+          }
+        }
+      ]
+    });
+
+    alert.present();
+  }
+
+  getAddress() {
+    let all: any[] = [];
+    let length = this.address.length;
+
+    for(let cnt=0; cnt<length; cnt++) {
+      all.push({ type: 'checkbox', value: cnt, label: this.address[cnt] });
+    }
+    
+    return all;
+  }
+
+  removeAddress() {
+    let alert = this.alertCtrl.create({
+      title: 'Hapus Alamat Kirim',
+      inputs: this.getAddress(),
+      buttons: [{
+          text: 'Batal',
+          role: 'cancel'
+        },
+        {
+          text: 'Hapus',
+          handler: data => {
+            let checked: boolean = false;
+
+            for(let index of data) {
+              checked = true;
+              delete this.address[index];
+            }
+
+            this.address = this.address.filter(x => true);
+            
+            if(checked) this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat berhasil dihapus." });
+            else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada alamat yang dipilih." });
 
             this.content.resize(); // Recalculate content dimensions
             if(this.content.scrollHeight > this.content.contentHeight) this.content.scrollTo(0, this.content.scrollHeight); // Scroll to user's latest chat if content has a scroll
