@@ -16,23 +16,46 @@
 <ion-content>
   <div class="chat-space">
     <ion-content #scrollable class="chat-space">
-      <div *ngFor="let chatbox of chatboxes" class="{{ chatbox.container }}"> <!-- For all items -->
+      <!-- For all chatboxes -->
+      <div *ngFor="let chatbox of chatboxes" class="{{ chatbox.container }}">
         <div class="{{ chatbox.type }}">
+          <!-- If content is text only -->
           <ng-container *ngIf="chatbox.content=='text'">
             <span class="chat-content" [innerHTML]="chatbox.data"></span>
           </ng-container>
+          <!-- If content contains list -->
           <ng-container *ngIf="chatbox.content=='list'">
+            <!-- Print header -->
             <span class="chat-content" [innerHTML]="chatbox.header"></span>
+            <!-- If content is list of address -->
             <ng-container *ngIf="chatbox.data=='address'">
+              <!-- If any -->
               <ng-container *ngIf="address.length">
+                <!-- For all address -->
                 <ng-container *ngFor="let addr of address; let idx=index">
                   <div class="chat-content">{{ idx+1 }}. {{ addr }}</div>
                 </ng-container>
               </ng-container>
+              <!-- If nothing -->
               <ng-container *ngIf="!address.length">
                 <div class="chat-content">Tidak ada.</div>
               </ng-container>
-            </ng-container>    
+            </ng-container>
+            <!-- If content is list of method -->
+            <ng-container *ngIf="chatbox.data=='method'">
+              <!-- If any -->
+              <ng-container *ngIf="method.length">
+                <!-- For all method -->
+                <ng-container *ngFor="let addr of address; let idx=index">
+                  <div class="chat-content">{{ idx+1 }}. {{ addr }}</div>
+                </ng-container>
+              </ng-container>
+              <!-- If nothing -->
+              <ng-container *ngIf="!method.length">
+                <div class="chat-content">Tidak ada.</div>
+              </ng-container>
+            </ng-container>
+            <!-- Print footer -->
             <span class="chat-content" [innerHTML]="chatbox.footer"></span>
           </ng-container>
         </div>

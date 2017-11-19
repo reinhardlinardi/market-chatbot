@@ -31,6 +31,7 @@ export class ChatPage {
   stack: string[] = []; // Command stack
 
   public address: string[] = []; // Array of address
+  public method: string[] = []; // Array of payment methods
   
   /* Constants */
   greeting: string = "Halo! Selamat datang! Saya adalah chatbot yang dapat membantu kamu berbelanja. Ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
@@ -51,8 +52,15 @@ export class ChatPage {
 
   address_header: string = "-- Alamat Kirim --\n\nDaftar alamat kirim Anda :\n\n";
   address_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah atau menghapus alamat kirim.\n\n"
-                            + "<b>Tambah :</b>\nMenambahkan alamat kirim baru. Jika alamat sudah terdaftar, alamat tidak akan ditambahkan ke daftar alamat kirim.\n"
+                            + "<b>Tambah :</b>\nMenambahkan alamat kirim baru. Jika alamat sudah terdaftar, alamat tidak akan ditambahkan.\n"
                             + "<b>Hapus :</b>\nMenghapus alamat kirim.\n\n"
+                            + "Contoh penggunaan perintah sebagai berikut :\n\n"
+                            + "<b>Tambah :</b> <u>Tambah</u>\n"
+                            + "<b>Hapus :</b> <u>Hapus</u>\n";
+  method_header: string = "-- Metode Pembayaran --\n\nDaftar metode pembayaran Anda:\n\n";
+  method_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah atau menghapus metode pembayaran.\n\n"
+                            + "<b>Tambah :</b>\nMenambahkan metode pembayaran baru.\n"
+                            + "<b>Hapus :</b>\nMenghapus metode pembayaran.\n\n"
                             + "Contoh penggunaan perintah sebagai berikut :\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
                             + "<b>Hapus :</b> <u>Hapus</u>\n";
@@ -107,24 +115,29 @@ export class ChatPage {
     let match_hapus = re_hapus.exec(lower_input);
 
     // Decide response
-    if(match_batal != null) {
+    if(match_batal != null) { // Batal
       //this.stack = [];
       // set match_something = true
     }
 
-    if(match_bantuan != null) this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: this.help }); // Menu bantuan
-    else if(match_alamat != null) {
+    if(match_bantuan != null) this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: this.help }); // Bantuan
+    else if(match_alamat != null) { // Alamat
       this.stack = [];
       this.stack.push("alamat");
       this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "list", header: this.address_header, footer: this.address_footer, data: "address" });
     }
-    else if(match_tambah != null) {
+    else if(match_metode != null) { // Metode
+      this.stack = [];
+      this.stack.push("metode");
+      this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "list", header: this.method_header, footer: this.method_footer, data: "method" });
+    }
+    else if(match_tambah != null) { // Tambah
       let prev_command: string = this.stack[this.stack.length - 1];
 
       if(prev_command == "alamat") this.addAddress();
       else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada data yang dapat ditambahkan." });
     }
-    else if(match_hapus != null) {
+    else if(match_hapus != null) { // Hapus
       let prev_command: string = this.stack[this.stack.length - 1];
       
       if(prev_command == "alamat") {
@@ -133,6 +146,7 @@ export class ChatPage {
       }
       else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada data yang dapat dihapus." });
     }
+    // Error
     else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: this.error });
   }
 
