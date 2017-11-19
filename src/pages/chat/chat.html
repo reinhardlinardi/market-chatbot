@@ -18,7 +18,18 @@
     <ion-content #scrollable class="chat-space">
       <div *ngFor="let chatbox of chatboxes" class="{{ chatbox.container }}"> <!-- For all items -->
         <div class="{{ chatbox.type }}">
-          <span class="chat-content" [innerHTML]="chatbox.chat"></span>
+          <ng-container *ngIf="chatbox.content=='text'">
+            <span class="chat-content" [innerHTML]="chatbox.data"></span>
+          </ng-container>
+          <ng-container *ngIf="chatbox.content=='list'">
+              <span class="chat-content" [innerHTML]="chatbox.header"></span>
+              <ng-container *ngIf="chatbox.data=='address'">
+                <ng-container *ngFor="let addr of address; let idx=index">
+                  <div class="chat-content">{{ idx+1 }}. {{ addr }}</div>
+                </ng-container>
+              </ng-container>
+              <span class="chat-content" [innerHTML]="chatbox.footer"></span>            
+          </ng-container>
         </div>
       </div>
     </ion-content>
