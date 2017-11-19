@@ -46,8 +46,8 @@
               <!-- If any -->
               <ng-container *ngIf="method.length">
                 <!-- For all method -->
-                <ng-container *ngFor="let addr of address; let idx=index">
-                  <div class="chat-content">{{ idx+1 }}. {{ addr }}</div>
+                <ng-container *ngFor="let mt of method; let idx=index">
+                  <div class="chat-content">{{ idx+1 }}. {{ mt }}</div>
                 </ng-container>
               </ng-container>
               <!-- If nothing -->

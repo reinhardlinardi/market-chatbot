@@ -64,7 +64,9 @@ export class ChatPage {
                             + "Contoh penggunaan perintah sebagai berikut :\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
                             + "<b>Hapus :</b> <u>Hapus</u>\n";
+
   error: string = "Perintah yang anda masukkan salah. Silahkan coba lagi atau ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
+
 
   /* Methods */
   constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController) {
@@ -73,6 +75,7 @@ export class ChatPage {
     // Send greeting message
     this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: this.greeting });
   }
+
 
   // Evaluate command given by user
   runCommand(command : Command) {
@@ -87,6 +90,7 @@ export class ChatPage {
       command.val = ""; // Reset model (and view, via data binding)
     }
   }
+
 
   // Action taken by bot
   botAction(input: string) {
@@ -114,42 +118,92 @@ export class ChatPage {
     let match_tambah = re_tambah.exec(lower_input);
     let match_hapus = re_hapus.exec(lower_input);
 
-    // Decide response
-    if(match_batal != null) { // Batal
+
+    /* --------------- Response --------------- */
+
+    if(match_batal != null) // Batal
+    {
       //this.stack = [];
       // set match_something = true
     }
 
-    if(match_bantuan != null) this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: this.help }); // Bantuan
-    else if(match_alamat != null) { // Alamat
+    // Bantuan
+    if(match_bantuan != null) this.chatboxes.push({ 
+      container: "chatbox-container-bot", type: "chatbox-bot", 
+      content: "text", data: this.help 
+    }); 
+    else if(match_alamat != null) // Alamat
+    { 
       this.stack = [];
       this.stack.push("alamat");
-      this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "list", header: this.address_header, footer: this.address_footer, data: "address" });
+      this.chatboxes.push({ 
+        container: "chatbox-container-bot", type: "chatbox-bot", 
+        content: "list", header: this.address_header, footer: this.address_footer, data: "address" 
+      });
     }
-    else if(match_metode != null) { // Metode
+    else if(match_metode != null) // Metode
+    { 
       this.stack = [];
       this.stack.push("metode");
-      this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "list", header: this.method_header, footer: this.method_footer, data: "method" });
+      this.chatboxes.push({ 
+        container: "chatbox-container-bot", type: "chatbox-bot", 
+        content: "list", header: this.method_header, footer: this.method_footer, data: "method" 
+      });
     }
-    else if(match_tambah != null) { // Tambah
+    else if(match_tambah != null) // Tambah
+    {
       let prev_command: string = this.stack[this.stack.length - 1];
 
-      if(prev_command == "alamat") this.addAddress();
-      else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada data yang dapat ditambahkan." });
+      if(prev_command == "alamat") this.addAddress(); /* Address */
+      else if(prev_command == "metode")
+      {
+        if(this.method.length != 2) this.addMethod(); /* Method */
+        else this.chatboxes.push({ 
+          container: "chatbox-container-bot", type: "chatbox-bot", 
+          content: "text", data: "Semua metode pembayaran sudah terdaftar." 
+        });
+      }
+      else this.chatboxes.push({ 
+        container: "chatbox-container-bot", type: "chatbox-bot", 
+        content: "text", data: "Tidak ada data yang dapat ditambahkan." 
+      });
     }
-    else if(match_hapus != null) { // Hapus
+    else if(match_hapus != null) // Hapus
+    {
       let prev_command: string = this.stack[this.stack.length - 1];
       
-      if(prev_command == "alamat") {
+      if(prev_command == "alamat") /* Address */
+      {
         if(this.address.length) this.removeAddress();
-        else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada alamat kirim yang terdaftar." }); 
+        else this.chatboxes.push({ 
+          container: "chatbox-container-bot", type: "chatbox-bot", 
+          content: "text", data: "Tidak ada alamat kirim yang terdaftar." 
+        });
       }
-      else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada data yang dapat dihapus." });
+      else if(prev_command == "metode") /* Method */
+      {
+        if(this.method.length) this.removeMethod();
+        else this.chatboxes.push({ 
+          container: "chatbox-container-bot", type: "chatbox-bot", 
+          content: "text", data: "Tidak ada metode pembayaran yang terdaftar." 
+        });
+      }
+      else this.chatboxes.push({ 
+        container: "chatbox-container-bot", type: "chatbox-bot", 
+        content: "text", data: "Tidak ada data yang dapat dihapus." 
+      });
     }
     // Error
-    else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: this.error });
+    else this.chatboxes.push({ 
+      container: "chatbox-container-bot", type: "chatbox-bot", 
+      content: "text", data: this.error 
+    });
   }
 
+  
+  /* --------------- Alerts --------------- */
+
+  /* Address */
   newValidAddress(new_address: string) {
     return !(this.address.indexOf(new_address) > -1);
   }
@@ -169,12 +223,21 @@ export class ChatPage {
           text: 'Tambah',
           handler: data => {
 
-            if(data.address == "") this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat kosong." });
+            if(data.address == "") this.chatboxes.push({ // If empty string
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Alamat kosong." 
+            });
             else {
-              if(this.newValidAddress(data.address)) {
+              if(this.newValidAddress(data.address)) { // If address not listed yet
                 this.address.push(data.address);
-                this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat berhasil ditambahkan." });
-              } else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat sudah terdaftar." });
+                this.chatboxes.push({ 
+                  container: "chatbox-container-bot", type: "chatbox-bot", 
+                  content: "text", data: "Alamat berhasil ditambahkan." 
+                });
+              } else this.chatboxes.push({ // If address listed
+                container: "chatbox-container-bot", type: "chatbox-bot", 
+                content: "text", data: "Alamat sudah terdaftar." 
+              });
             }
 
             this.content.resize(); // Recalculate content dimensions
@@ -187,12 +250,12 @@ export class ChatPage {
     alert.present();
   }
 
-  getAddress() {
+  getAddress(style: string) {
     let all: any[] = [];
     let length = this.address.length;
 
     for(let cnt=0; cnt<length; cnt++) {
-      all.push({ type: 'checkbox', value: cnt, label: this.address[cnt] });
+      all.push({ type: style, value: cnt, label: this.address[cnt] });
     }
     
     return all;
@@ -201,7 +264,7 @@ export class ChatPage {
   removeAddress() {
     let alert = this.alertCtrl.create({
       title: 'Hapus Alamat Kirim',
-      inputs: this.getAddress(),
+      inputs: this.getAddress('checkbox'),
       buttons: [{
           text: 'Batal',
           role: 'cancel'
@@ -209,17 +272,109 @@ export class ChatPage {
         {
           text: 'Hapus',
           handler: data => {
-            let checked: boolean = false;
 
-            for(let index of data) {
-              checked = true;
-              delete this.address[index];
-            }
-
+            for(let index of data) delete this.address[index];
             this.address = this.address.filter(x => true);
             
-            if(checked) this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Alamat berhasil dihapus." });
-            else this.chatboxes.push({ container: "chatbox-container-bot", type: "chatbox-bot", content: "text", data: "Tidak ada alamat yang dipilih." });
+            if(data.length) this.chatboxes.push({ // If any
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Alamat berhasil dihapus." 
+            });
+            else this.chatboxes.push({ // If nothing
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Tidak ada alamat yang dipilih." 
+            });
+
+            this.content.resize(); // Recalculate content dimensions
+            if(this.content.scrollHeight > this.content.contentHeight) this.content.scrollTo(0, this.content.scrollHeight); // Scroll to user's latest chat if content has a scroll
+          }
+        }
+      ]
+    });
+
+    alert.present();
+  }
+
+  getAvailableMethod() {
+    let all: any[] = ['Transfer', 'Kartu Kredit'];
+    let missing: any[] = [];
+    let length = all.length;
+
+    for(let cnt=0; cnt<length; cnt++) {
+      if(this.method.indexOf(all[cnt]) == -1) missing.push({ type: 'checkbox', value: all[cnt], label: all[cnt] });
+    }
+    
+    return missing;
+  }
+
+  /* Method */
+  addMethod() {
+    let alert = this.alertCtrl.create({
+      title: 'Tambah Metode Pembayaran',
+      inputs: this.getAvailableMethod(),
+      buttons: [{
+          text: 'Batal',
+          role: 'cancel'
+        },
+        {
+          text: 'Tambah',
+          handler: data => {
+            
+            for(let option of data) this.method.push(option);
+
+            if(data.length) this.chatboxes.push({ // If any
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Metode pembayaran berhasil ditambahkan."
+            });
+            else this.chatboxes.push({ // If nothing
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Tidak ada metode pembayaran yang dipilih." 
+            });
+
+            this.content.resize(); // Recalculate content dimensions
+            if(this.content.scrollHeight > this.content.contentHeight) this.content.scrollTo(0, this.content.scrollHeight); // Scroll to user's latest chat if content has a scroll
+          }
+        }
+      ]
+    });
+
+    alert.present();
+  }
+
+  getMethod(style: string) {
+    let all: any[] = [];
+    let length = this.method.length;
+
+    for(let cnt=0; cnt<length; cnt++) {
+      all.push({ type: style, value: cnt, label: this.method[cnt] });
+    }
+    
+    return all;
+  }
+
+  removeMethod() {
+    let alert = this.alertCtrl.create({
+      title: 'Hapus Metode Pembayaran',
+      inputs: this.getMethod('checkbox'),
+      buttons: [{
+          text: 'Batal',
+          role: 'cancel'
+        },
+        {
+          text: 'Hapus',
+          handler: data => {
+
+            for(let index of data) delete this.method[index];
+            this.method = this.method.filter(x => true);
+            
+            if(data.length) this.chatboxes.push({ // If any
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Metode pembayaran berhasil dihapus." 
+            });
+            else this.chatboxes.push({ // If nothing
+              container: "chatbox-container-bot", type: "chatbox-bot", 
+              content: "text", data: "Tidak ada metode pembayaran yang dipilih." 
+            });
 
             this.content.resize(); // Recalculate content dimensions
             if(this.content.scrollHeight > this.content.contentHeight) this.content.scrollTo(0, this.content.scrollHeight); // Scroll to user's latest chat if content has a scroll
