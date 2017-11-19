@@ -33,7 +33,8 @@ export class ChatPage {
   public address: string[] = []; // Array of address
   public method: string[] = []; // Array of payment methods
   
-  public cart: any[] = []; // Cart
+  public cart: any[] = [1]; // Cart
+  public cart_detail: any[] = [];
   public all_item: any[] = []; // Array of all searched item
   current_item: string = ""; // Current searched item
   
@@ -208,6 +209,8 @@ export class ChatPage {
       }
     }
     else if(match_keranjang != null) {
+      for(let id of this.cart) this.cart_detail.push(this.getDetailById(id));
+
       this.chatboxes.push({
         container: "chatbox-container-bot", type: "chatbox-bot", 
         content: "list", header: this.cart_header, footer: this.cart_footer, data: "cart"
@@ -461,6 +464,10 @@ export class ChatPage {
   /* Items */
   getAllItem(key: string) {
     return this.item.filter(x => x['keyword'] == key);
+  }
+
+  getDetailById(id: number) {
+    return this.item.filter(x => x['id'] == id);
   }
 
   getAvailableItem(key: string) {
