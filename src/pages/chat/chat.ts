@@ -32,6 +32,20 @@ export class ChatPage {
 
   public address: string[] = []; // Array of address
   public method: string[] = []; // Array of payment methods
+  public item_name : string[] = ['kamera']; // Array of item name
+  public item_detail: any = // Array of item detail
+  {
+    kamera: [
+      {
+        brand: 'Canon',
+        price: 3000000
+      },
+      {
+        brand: 'Sony',
+        price: 2500000
+      }
+    ]
+  }; 
   
   /* Constants */
   greeting: string = "Halo! Selamat datang! Saya adalah chatbot yang dapat membantu kamu berbelanja. Ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
@@ -40,15 +54,16 @@ export class ChatPage {
                   + "<b>Keranjang :</b>\nMenampilkan semua barang yang ada di keranjang.\n"
                   + "<b>Bayar :</b>\nMelanjutkan ke tahap pembayaran.\n"
                   + "<b>Metode :</b>\nMenampilkan atau mengubah metode pembayaran.\n"
-                  + "<b>Alamat :</b>\nMenampilkan atau mengubah alamat kirim.\n"
-                  + "<b>Batal : </b>\nMembatalkan pilihan, kembali ke pilihan sebelumnya.\n\n"
+                  //+ "<b>Alamat :</b>\nMenampilkan atau mengubah alamat kirim.\n"
+                  + "<b>Alamat :</b>\nMenampilkan atau mengubah alamat kirim.\n\n"
+                  //+ "<b>Batal : </b>\nMembatalkan pilihan, kembali ke pilihan sebelumnya.\n\n"
                   + "Contoh penggunaan perintah sebagai berikut :\n\n"
                   + "<b>Cari :</b> <u>Cari</u> kamera\n"
                   + "<b>Keranjang :</b> <u>Keranjang</u>\n"
                   + "<b>Bayar :</b> <u>Bayar</u>\n"
                   + "<b>Metode :</b> <u>Metode</u>\n"
-                  + "<b>Alamat :</b> <u>Alamat</u>\n"
-                  + "<b>Batal :</b> <u>Batal</u>\n";
+                  + "<b>Alamat :</b> <u>Alamat</u>\n";
+                  //+ "<b>Batal :</b> <u>Batal</u>\n";
 
   address_header: string = "-- Alamat Kirim --\n\nDaftar alamat kirim Anda :\n\n";
   address_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah atau menghapus alamat kirim.\n\n"
@@ -57,10 +72,17 @@ export class ChatPage {
                             + "Contoh penggunaan perintah sebagai berikut :\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
                             + "<b>Hapus :</b> <u>Hapus</u>\n";
-  method_header: string = "-- Metode Pembayaran --\n\nDaftar metode pembayaran Anda:\n\n";
+  method_header: string = "-- Metode Pembayaran --\n\nDaftar metode pembayaran Anda :\n\n";
   method_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah atau menghapus metode pembayaran.\n\n"
                             + "<b>Tambah :</b>\nMenambahkan metode pembayaran baru.\n"
                             + "<b>Hapus :</b>\nMenghapus metode pembayaran.\n\n"
+                            + "Contoh penggunaan perintah sebagai berikut :\n\n"
+                            + "<b>Tambah :</b> <u>Tambah</u>\n"
+                            + "<b>Hapus :</b> <u>Hapus</u>\n";
+  item_header: string = "-- Hasil Pencarian --\n\nHasil pencarian barang :\n\n";
+  item_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah barang ke keranjang atau menghapus barang dari keranjang.\n\n"
+                            + "<b>Tambah :</b>\nMenambahkan barang ke keranjang.\n"
+                            + "<b>Hapus :</b>\nMenghapus barang dari keranjang.\n\n"
                             + "Contoh penggunaan perintah sebagai berikut :\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
                             + "<b>Hapus :</b> <u>Hapus</u>\n";
@@ -98,7 +120,7 @@ export class ChatPage {
     
     // Regex for string matching
     let re_bantuan = /^\s*bantuan\s*$/;
-    let re_cari = /^\s*cari\s*$/;
+    let re_cari = /^\s*cari\s*(.+)$/;
     let re_keranjang = /^\s*keranjang\s*$/;
     let re_bayar = /^\s*bayar\s*$/;
     let re_metode = /^\s*metode\s*$/;
@@ -148,6 +170,24 @@ export class ChatPage {
       this.chatboxes.push({ 
         container: "chatbox-container-bot", type: "chatbox-bot", 
         content: "list", header: this.method_header, footer: this.method_footer, data: "method" 
+      });
+    }
+    else if(match_cari != null) // Cari
+    {
+      let item:string = match_cari[1].toLowerCase();
+      let idx = this.item_name.indexOf(item);
+
+      if(idx > -1) { // If any
+        let detail = this.item_detail[item];
+
+        this.chatboxes.push({
+          container: "chatbox-container-bot", type: "chatbox-bot", 
+          content: "list", header: this.item_header, footer: this.item_footer, data: "item", key: item
+        })
+      }
+      else this.chatboxes.push({ // If nothing
+        container: "chatbox-container-bot", type: "chatbox-bot", 
+        content: "text", data: "Maaf, barang yang Anda cari tidak ditemukan."
       });
     }
     else if(match_tambah != null) // Tambah
