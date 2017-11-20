@@ -121,7 +121,7 @@ export class ChatPage {
 
   /* ------------ Address  ------------ */
 
-  address_header: string = "-- Alamat Kirim --
+  address_header: string = "-- Alamat Kirim --"
                             + "\n\n"
                             + "Daftar alamat kirim Anda :"
                             + "\n\n";
@@ -370,7 +370,8 @@ export class ChatPage {
           }
         );
       }
-      else {
+      else 
+      {
         this.current_item = "";
 
         this.chatboxes.push(
@@ -467,6 +468,9 @@ export class ChatPage {
       // Get previous command
       let prev_command: string = this.stack[this.stack.length - 1];
       
+
+      // Response categorization based on context
+
       /* --- Address --- */
       if(prev_command == "alamat")
       {
@@ -946,7 +950,7 @@ export class ChatPage {
             handler: data => {
             
               // Add item to cart
-              for(let option of data) this.cart.push(this.item[key][option]['id']);
+              for(let option of data) this.cart.push(option);
 
               // Check if user selected any item
               if(data.length) {
