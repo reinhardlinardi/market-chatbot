@@ -209,6 +209,7 @@ export class ChatPage {
       }
     }
     else if(match_keranjang != null) {
+      this.cart_detail = [];
       for(let id of this.cart) this.cart_detail.push(this.getDetailById(id));
 
       console.log(this.cart_detail);
