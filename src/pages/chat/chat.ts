@@ -197,7 +197,7 @@ export class ChatPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController)
   {
     // Create new instance of model in Constructor
-    this.command = new Command(); 
+    this.command = new Command();
 
     // Send greeting message
     this.chatboxes.push(
@@ -251,8 +251,7 @@ export class ChatPage {
   botAction(input: string) { // Action taken by bot
 
     // Convert to lowercase first
-    let lower_input: string = input.toLowerCase(); 
-    
+    let lower_input: string = input.toLowerCase();
 
     /* ------------ Pattern Matcher  ------------ */
 
@@ -890,7 +889,26 @@ export class ChatPage {
 
   /* ------------ Cart and Item  ------------ */ 
 
-  
+
+  /* --- Encode price to human readable form --- */
+
+  public encodePrice(price: number) {
+    let price_string: string = price.toString();
+    let result = "";
+    
+    let length = price_string.length;
+    let modulo = length % 3;
+
+    for(let idx=0; idx<length; idx++)
+    {
+      if(idx % 3 == modulo) result += ".";
+      result += price_string[idx];
+    }
+    
+    return result;
+  }
+
+
   /* --- Get all item matches specified keyword --- */
 
   getAllItem(key: string)
@@ -922,7 +940,7 @@ export class ChatPage {
           { 
             type: 'checkbox',
             value: all[cnt]['id'],
-            label: all[cnt]['brand'] + ", Rp " + all[cnt]['price']
+            label: all[cnt]['brand'] + ", Rp " + this.encodePrice(all[cnt]['price'])
           }
         );
       }
