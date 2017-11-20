@@ -79,7 +79,7 @@ export class ChatPage {
       keyword: 'kamera',
       name: 'Kamera',
       brand: 'Sony',
-      price: 2500000
+      price: 500000
     }
   ]; 
   
@@ -890,7 +890,7 @@ export class ChatPage {
   /* ------------ Cart and Item  ------------ */ 
 
 
-  /* --- Encode price to human readable form --- */
+  /* --- Encode price to Rp standard form --- */
 
   public encodePrice(price: number) {
     let price_string: string = price.toString();
@@ -901,7 +901,7 @@ export class ChatPage {
 
     for(let idx=0; idx<length; idx++)
     {
-      if(idx % 3 == modulo) result += ".";
+      if(idx % 3 == modulo && idx != 0) result += ".";
       result += price_string[idx];
     }
     
