@@ -61,7 +61,7 @@
               <ng-container *ngIf="all_item.length">
                 <!-- For all items -->
                 <ng-container *ngFor="let detail of all_item; let idx=index">
-                  <div class="chat-content">{{ idx+1 }})<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ detail['price'] }}</div>
+                  <div class="chat-content"><br/>{{ idx+1 }})<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ detail['price'] }}</div>
                 </ng-container>
               </ng-container>
               <!-- If nothing -->
@@ -74,8 +74,8 @@
               <!-- If any -->
               <ng-container *ngIf="cart_detail.length">
                 <!-- For all items -->
-                <ng-container *ngFor="let item of cart_detail; let idx=index">
-                  <div class="chat-content">{{ idx+1 }})<br/>Barang: {{ item[idx]['name'] }}<br/>Merk: {{ item[idx]['brand'] }}<br/>Harga: Rp {{ item[idx]['price'] }}</div>
+                <ng-container *ngFor="let detail of cart_detail; let idx=index">
+                  <div class="chat-content"><br/>{{ idx+1 }})<br/>Barang: {{ detail['name'] }}<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ detail['price'] }}</div>
                 </ng-container>
               </ng-container>
               <!-- If nothing -->

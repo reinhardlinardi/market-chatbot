@@ -33,7 +33,7 @@ export class ChatPage {
   public address: string[] = []; // Array of address
   public method: string[] = []; // Array of payment methods
   
-  public cart: any[] = [1]; // Cart
+  public cart: any[] = [1,2]; // Cart
   public cart_detail: any[] = [];
   public all_item: any[] = []; // Array of all searched item
   current_item: string = ""; // Current searched item
@@ -88,14 +88,14 @@ export class ChatPage {
                             + "Contoh penggunaan perintah sebagai berikut :\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
                             + "<b>Hapus :</b> <u>Hapus</u>\n";
-  item_header: string = "-- Hasil Pencarian --\n\nHasil pencarian barang :\n\n";
+  item_header: string = "-- Hasil Pencarian --\n\nHasil pencarian barang :\n";
   item_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah barang ke keranjang atau menghapus barang dari keranjang.\n\n"
                             + "<b>Tambah :</b>\nMenambahkan barang ke keranjang.\n"
                             + "<b>Hapus :</b>\nMenghapus barang dari keranjang.\n\n"
                             + "Contoh penggunaan perintah sebagai berikut :\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
                             + "<b>Hapus :</b> <u>Hapus</u>\n";
-  cart_header: string = "-- Keranjang --\n\nKeranjang Anda :\n\n";
+  cart_header: string = "-- Keranjang --\n\nKeranjang Anda :\n";
   cart_footer: string = "";
 
   error: string = "Perintah yang anda masukkan salah. Silahkan coba lagi atau ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
@@ -198,7 +198,7 @@ export class ChatPage {
         this.chatboxes.push({
           container: "chatbox-container-bot", type: "chatbox-bot", 
           content: "list", header: this.item_header, footer: this.item_footer, data: "item", key: item
-        })
+        });
       }
       else {
         this.current_item = "";
@@ -211,10 +211,12 @@ export class ChatPage {
     else if(match_keranjang != null) {
       for(let id of this.cart) this.cart_detail.push(this.getDetailById(id));
 
+      console.log(this.cart_detail);
+
       this.chatboxes.push({
         container: "chatbox-container-bot", type: "chatbox-bot", 
         content: "list", header: this.cart_header, footer: this.cart_footer, data: "cart"
-      })
+      });
     }
     else if(match_tambah != null) // Tambah
     {
@@ -467,7 +469,8 @@ export class ChatPage {
   }
 
   getDetailById(id: number) {
-    return this.item.filter(x => x['id'] == id);
+    console.log(this.item.filter(x => x['id'] == id));
+    return this.item.filter(x => x['id'] == id)[0];
   }
 
   getAvailableItem(key: string) {
