@@ -179,7 +179,8 @@ export class ChatPage {
 
   cart_header: string = "-- Keranjang --"
                         + "\n\n"
-                        + "Keranjang Anda :\n";
+                        + "Keranjang Anda :"
+                        + "\n\n";
   cart_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menghapus barang dari keranjang."
                         + "\n\n"
                         + "<b>Hapus :</b>\n"
@@ -194,7 +195,7 @@ export class ChatPage {
   payment_header: string = "-- Pembayaran --"
                             + "\n\n"
                             + "Keranjang Anda :\n";
-  payment_footer: string = "\nKetik \"OK\" untuk melanjutkan";
+  payment_footer: string = "\nKetik \"OK\" untuk melanjutkan.";
 
   /* ------------ Error  ------------ */
 
@@ -278,6 +279,7 @@ export class ChatPage {
     let re_alamat = /^\s*alamat\s*$/;
     let re_tambah = /^\s*tambah\s*$/;
     let re_hapus = /^\s*hapus\s*$/;
+    let re_ok = /^\s*ok\s*$/;
     
 
     /* ------ Save regex match ------ */
@@ -290,6 +292,7 @@ export class ChatPage {
     let match_alamat = re_alamat.exec(lower_input);
     let match_tambah = re_tambah.exec(lower_input);
     let match_hapus = re_hapus.exec(lower_input);
+    let match_ok = re_ok.exec(lower_input);
 
 
     /* ------------ Response Categorization  ------------ */
@@ -401,10 +404,6 @@ export class ChatPage {
       this.stack = [];
       this.stack.push("keranjang");
 
-      // Get item details
-      this.cart_detail = [];
-      for(let id of this.cart) this.cart_detail.push(this.getDetailById(id));
-
       // Push chatbox
       this.chatboxes.push(
         {
@@ -437,8 +436,6 @@ export class ChatPage {
             data: "cart"
           }
         );
-
-        // panggil sesuatu
       }
       else
       {
@@ -447,10 +444,67 @@ export class ChatPage {
             container: "chatbox-container-bot",
             type: "chatbox-bot", 
             content: "text",
-            data: "Tidak ada barang di keranjang"
+            data: "Tidak ada barang di keranjang."
           }
         );
       }
+    }
+
+    /* ------ OK ------ */
+
+    else if(match_ok != null)
+    {
+      // Get previous command
+      let prev_command: string = this.stack[this.stack.length - 1];
+
+      if(prev_command == "bayar")
+      {
+        if(this.address.length && this.method.length)
+        {
+          let valid_address = this.selectAddress();
+
+          if(valid_address)
+          {
+            let valid_payment = this.selectPayment();
+
+            if(valid_payment)
+            {
+              this.chatboxes.push(
+                {
+                  container: "chatbox-container-bot",
+                  type: "chatbox-bot",
+                  content: "text",
+                  data: "Transaksi berhasil. Terima kasih telah berbelanja!"
+                }
+              );
+            }
+          }
+        }
+        else
+        {
+          this.chatboxes.push(
+            {
+              container: "chatbox-container-bot",
+              type: "chatbox-bot",
+              content: "text",
+              data: "Alamat atau metode pembayaran belum terdaftar."
+            }
+          );
+        }
+      }
+      else
+      {
+        this.chatboxes.push(
+          {
+            container: "chatbox-container-bot",
+            type: "chatbox-bot", 
+            content: "text",
+            data: "Anda dapat melakukan konfirmasi pada tahap pembayaran. "
+                  + "Ketik \"Bayar\" untuk lanjut ke tahap pembayaran."
+          }
+        );
+      }
+      //this.continuePayment();
     }
 
     /* ------ Add ------ */
@@ -1077,8 +1131,12 @@ export class ChatPage {
             text: 'Tambah',
             handler: data => {
             
-              // Add item to cart
-              for(let option of data) this.cart.push(option);
+              // Add item to cart and cart detail
+              for(let option of data)
+              {
+                this.cart.push(option);
+                this.cart_detail.push(this.getDetailById(option));
+              }
 
               // Check if user selected any item
               if(data.length) {
@@ -1141,8 +1199,14 @@ export class ChatPage {
             handler: data => {
 
               // Delete item from cart
-              for(let index of data) delete this.cart[index];
+              for(let index of data)
+              {
+                delete this.cart[index];
+                delete this.cart_detail[index];
+              }
+
               this.cart = this.cart.filter(x => true);
+              this.cart_detail = this.cart_detail.filter(x => true);
             
               // Check if user selected any item
               if(data.length) {
@@ -1183,5 +1247,155 @@ export class ChatPage {
 
     // Show alert
     alert.present();
+  }
+
+
+  /* --------------------- Payment --------------------- */
+
+
+  /* --- Show address selection popup --- */
+
+  selectAddress()
+  {
+    let alert = this.alertCtrl.create(
+      {
+        title: 'Pilih Alamat Kirim',
+        inputs: this.getAddress('radio'),
+        buttons: [
+          {
+            text: 'Batal',
+            role: 'cancel'
+          },
+          {
+            text: 'Pilih',
+            handler: data => {
+
+              console.log(data);
+              /*
+              this.chatboxes.push(
+                {
+                  container: "chatbox-container-bot",
+                  type: "chatbox-bot",
+                  content: "text",
+                  data: "Tidak ada alamat yang dipilih."
+                }
+              );
+            
+              // Add item to cart
+              for(let option of data) this.cart.push(option);
+
+              // Check if user selected any item
+              if(data.length) {
+                // Push chatbox
+                this.chatboxes.push(
+                  {
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot", 
+                    content: "text",
+                    data: "Barang berhasil ditambahkan ke keranjang."
+                  }
+                );
+              }
+              else
+              {
+                // Push chatbox
+                this.chatboxes.push(
+                  { 
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot", 
+                    content: "text",
+                    data: "Tidak ada barang yang dipilih."
+                  }
+                );
+              }
+
+              // Recalculate content dimensions
+              this.content.resize();
+            
+              // Scroll to user's latest chat if content has a scroll
+              if(this.content.scrollHeight > this.content.contentHeight) {
+                this.content.scrollTo(0, this.content.scrollHeight);
+              }
+              */
+            }
+          }
+        ]
+      }
+    );
+
+    // Show alert
+    alert.present();
+  }
+
+
+  /* --- Show payment method selection popup --- */
+
+  selectPayment()
+  {
+    let alert = this.alertCtrl.create(
+      {
+        title: 'Tambah Ke Keranjang',
+        inputs: this.getAddress('checkbox'),
+        buttons: [
+          {
+            text: 'Batal',
+            role: 'cancel'
+          },
+          {
+            text: 'Tambah',
+            handler: data => {
+            
+              // Add item to cart
+              for(let option of data) this.cart.push(option);
+
+              // Check if user selected any item
+              if(data.length) {
+                // Push chatbox
+                this.chatboxes.push(
+                  {
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot", 
+                    content: "text",
+                    data: "Barang berhasil ditambahkan ke keranjang."
+                  }
+                );
+              }
+              else
+              {
+                // Push chatbox
+                this.chatboxes.push(
+                  { 
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot", 
+                    content: "text",
+                    data: "Tidak ada barang yang dipilih."
+                  }
+                );
+              }
+
+              // Recalculate content dimensions
+              this.content.resize();
+            
+              // Scroll to user's latest chat if content has a scroll
+              if(this.content.scrollHeight > this.content.contentHeight) {
+                this.content.scrollTo(0, this.content.scrollHeight);
+              }
+            }
+          }
+        ]
+      }
+    );
+
+    // Show alert
+    alert.present();
+
+    this.chatboxes.push(
+      {
+        container: "chatbox-container-bot",
+        type: "chatbox-bot",
+        content: "text",
+        data: "Tidak ada metode pembayaran yang dipilih."
+      }
+    );
   }
 }
