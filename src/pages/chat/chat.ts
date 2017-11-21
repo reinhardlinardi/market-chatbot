@@ -82,6 +82,11 @@ export class ChatPage {
       price: 500000
     }
   ]; 
+
+  /* ------------ Payment  ------------ */
+
+  current_address: number = -1; // Selected address
+  current_payment: number = -1; // Selected payment method
   
 
   /* -------------------- Constants -------------------- */
@@ -179,8 +184,7 @@ export class ChatPage {
 
   cart_header: string = "-- Keranjang --"
                         + "\n\n"
-                        + "Keranjang Anda :"
-                        + "\n\n";
+                        + "Keranjang Anda :\n";
   cart_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menghapus barang dari keranjang."
                         + "\n\n"
                         + "<b>Hapus :</b>\n"
@@ -432,7 +436,7 @@ export class ChatPage {
             type: "chatbox-bot", 
             content: "list",
             header: this.payment_header,
-            footer: this.payment_footer,
+            footer: "\n<b>Total harga : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>\n" + this.payment_footer,
             data: "cart"
           }
         );
@@ -461,13 +465,15 @@ export class ChatPage {
       {
         if(this.address.length && this.method.length)
         {
-          let valid_address = this.selectAddress();
+          this.selectAddress();
+          console.log("Address done");
 
-          if(valid_address)
+          if(this.current_address != -1)
           {
-            let valid_payment = this.selectPayment();
+            this.selectPayment();
+            console.log("Payment done");
 
-            if(valid_payment)
+            if(this.current_payment != -1)
             {
               this.chatboxes.push(
                 {
@@ -1029,6 +1035,19 @@ export class ChatPage {
   /* --------------------- Cart and Item --------------------- */
 
 
+  /* --- Get total price --- */
+
+  getTotalPrice(): number
+  {
+    let total: number = 0;
+    let length = this.cart_detail.length;
+
+    for(let idx=0; idx<length; idx++) total += this.cart_detail[idx]['price'];
+
+    return total;
+  }
+
+
   /* --- Encode price to Rp standard form --- */
 
   public encodePrice(price: number)
@@ -1270,41 +1289,17 @@ export class ChatPage {
             text: 'Pilih',
             handler: data => {
 
-              console.log(data);
-              /*
-              this.chatboxes.push(
-                {
-                  container: "chatbox-container-bot",
-                  type: "chatbox-bot",
-                  content: "text",
-                  data: "Tidak ada alamat yang dipilih."
-                }
-              );
-            
-              // Add item to cart
-              for(let option of data) this.cart.push(option);
-
-              // Check if user selected any item
-              if(data.length) {
-                // Push chatbox
-                this.chatboxes.push(
-                  {
-                    container: "chatbox-container-bot",
-                    type: "chatbox-bot", 
-                    content: "text",
-                    data: "Barang berhasil ditambahkan ke keranjang."
-                  }
-                );
-              }
+              // Check if user selected any address
+              if(data != null) this.current_address = data;
               else
               {
                 // Push chatbox
                 this.chatboxes.push(
-                  { 
+                  {
                     container: "chatbox-container-bot",
-                    type: "chatbox-bot", 
+                    type: "chatbox-bot",
                     content: "text",
-                    data: "Tidak ada barang yang dipilih."
+                    data: "Tidak ada alamat yang dipilih."
                   }
                 );
               }
@@ -1316,7 +1311,6 @@ export class ChatPage {
               if(this.content.scrollHeight > this.content.contentHeight) {
                 this.content.scrollTo(0, this.content.scrollHeight);
               }
-              */
             }
           }
         ]
@@ -1332,33 +1326,67 @@ export class ChatPage {
 
   selectPayment()
   {
-    let alert = this.alertCtrl.create(
+    let required = this.alertCtrl.create(
       {
-        title: 'Tambah Ke Keranjang',
-        inputs: this.getAddress('checkbox'),
+        title: 'Kartu Kredit Kosong',
+        subTitle : 'Data kartu kredit harus diisi',
+        buttons : [
+          {
+            text: 'Batal',
+            role: 'cancel'
+          }
+        ]
+      }
+    );
+
+    let credit = this.alertCtrl.create(
+      {
+        title: 'Masukkan Data Kartu Kredit',
+        inputs: [
+          {
+            name: 'kredit',
+            placeholder: 'Nomor kartu kredit'
+          },
+          {
+            name: 'PIN',
+            placeholder: 'PIN',
+            type: 'password'
+          }
+        ],
         buttons: [
           {
             text: 'Batal',
             role: 'cancel'
           },
           {
-            text: 'Tambah',
+            text: 'Login',
+            handler: data => {
+
+              if(data.kredit == "" || data.PIN == "") required.present();
+            }
+          }
+        ]
+      }
+    );
+
+    let alert = this.alertCtrl.create(
+      {
+        title: 'Pilih Metode Pembayaran',
+        inputs: this.getMethod('radio'),
+        buttons: [
+          {
+            text: 'Batal',
+            role: 'cancel'
+          },
+          {
+            text: 'Pilih',
             handler: data => {
             
-              // Add item to cart
-              for(let option of data) this.cart.push(option);
+              // Check if user selected any payment
+              if(data != null) {
+                this.current_payment = data;
 
-              // Check if user selected any item
-              if(data.length) {
-                // Push chatbox
-                this.chatboxes.push(
-                  {
-                    container: "chatbox-container-bot",
-                    type: "chatbox-bot", 
-                    content: "text",
-                    data: "Barang berhasil ditambahkan ke keranjang."
-                  }
-                );
+                if(this.method[this.current_payment] == "Kartu Kredit") credit.present();
               }
               else
               {
@@ -1368,7 +1396,7 @@ export class ChatPage {
                     container: "chatbox-container-bot",
                     type: "chatbox-bot", 
                     content: "text",
-                    data: "Tidak ada barang yang dipilih."
+                    data: "Tidak ada metode pembayaran yang dipilih."
                   }
                 );
               }
@@ -1388,14 +1416,5 @@ export class ChatPage {
 
     // Show alert
     alert.present();
-
-    this.chatboxes.push(
-      {
-        container: "chatbox-container-bot",
-        type: "chatbox-bot",
-        content: "text",
-        data: "Tidak ada metode pembayaran yang dipilih."
-      }
-    );
   }
 }
