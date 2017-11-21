@@ -106,17 +106,14 @@ export class ChatPage {
                   + "Melanjutkan ke tahap pembayaran.\n"
                   + "<b>Metode :</b>\n"
                   + "Menampilkan atau mengubah metode pembayaran.\n"
-                  //+ "<b>Alamat :</b>\nMenampilkan atau mengubah alamat kirim.\n"
                   + "<b>Alamat :</b>\nMenampilkan atau mengubah alamat kirim."
                   + "\n\n"
-                  //+ "<b>Batal : </b>\nMembatalkan pilihan, kembali ke pilihan sebelumnya.\n\n"
                   + "Contoh penggunaan perintah sebagai berikut :\n\n"
                   + "<b>Cari :</b> <u>Cari</u> kamera\n"
                   + "<b>Keranjang :</b> <u>Keranjang</u>\n"
                   + "<b>Bayar :</b> <u>Bayar</u>\n"
                   + "<b>Metode :</b> <u>Metode</u>\n"
-                  + "<b>Alamat :</b> <u>Alamat</u>\n";
-                  //+ "<b>Batal :</b> <u>Batal</u>\n";
+                  + "<b>Alamat :</b> <u>Alamat</u>";
 
 
   /* ------------ Address  ------------ */
@@ -137,7 +134,7 @@ export class ChatPage {
                             + "Contoh penggunaan perintah sebagai berikut :"
                             + "\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
-                            + "<b>Hapus :</b> <u>Hapus</u>\n";
+                            + "<b>Hapus :</b> <u>Hapus</u>";
 
 
   /* ------------ Method  ------------ */
@@ -157,7 +154,7 @@ export class ChatPage {
                             + "Contoh penggunaan perintah sebagai berikut :"
                             + "\n\n"
                             + "<b>Tambah :</b> <u>Tambah</u>\n"
-                            + "<b>Hapus :</b> <u>Hapus</u>\n";
+                            + "<b>Hapus :</b> <u>Hapus</u>";
 
 
   /* ------------ Item  ------------ */
@@ -176,7 +173,7 @@ export class ChatPage {
                         + "Contoh penggunaan perintah sebagai berikut :"
                         + "\n\n"
                         + "<b>Tambah :</b> <u>Tambah</u>\n"
-                        + "<b>Hapus :</b> <u>Hapus</u>\n";
+                        + "<b>Hapus :</b> <u>Hapus</u>";
 
   /* ------------ Cart  ------------ */
 
@@ -190,7 +187,16 @@ export class ChatPage {
                         + "\n\n"
                         + "Contoh penggunaan perintah sebagai berikut :"
                         + "\n\n"
-                        + "<b>Hapus :</b> <u>Hapus</u>\n";
+                        + "<b>Hapus :</b> <u>Hapus</u>";
+
+  /* ------------ Payment  ------------ */
+
+  payment_header: string = "-- Pembayaran --"
+                            + "\n\n"
+                            + "Keranjang Anda :\n";
+  payment_footer: string = "\nKetik \"OK\" untuk melanjutkan";
+
+  /* ------------ Error  ------------ */
 
   error: string = "Perintah yang anda masukkan salah. "
                   + "Silahkan coba lagi atau ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
@@ -270,7 +276,6 @@ export class ChatPage {
     let re_bayar = /^\s*bayar\s*$/;
     let re_metode = /^\s*metode\s*$/;
     let re_alamat = /^\s*alamat\s*$/;
-    let re_batal = /^\s*batal\s*$/;
     let re_tambah = /^\s*tambah\s*$/;
     let re_hapus = /^\s*hapus\s*$/;
     
@@ -283,22 +288,14 @@ export class ChatPage {
     let match_bayar = re_bayar.exec(lower_input);
     let match_metode = re_metode.exec(lower_input);
     let match_alamat = re_alamat.exec(lower_input);
-    let match_batal = re_batal.exec(lower_input);
     let match_tambah = re_tambah.exec(lower_input);
     let match_hapus = re_hapus.exec(lower_input);
 
 
     /* ------------ Response Categorization  ------------ */
 
-
-    /* ------ Cancel ------ */
-    if(match_batal != null)
-    {
-      //this.stack = [];
-      // set match_something = true
-    }
-
     /* ------ Help ------ */
+
     if(match_bantuan != null)
     {
       this.chatboxes.push(
@@ -310,7 +307,9 @@ export class ChatPage {
         }
       );
     }
+
     /* ------ Address ------ */ 
+
     else if(match_alamat != null)
     {
       // Stack 
@@ -329,7 +328,9 @@ export class ChatPage {
         }
       );
     }
+    
     /* ------ Method ------ */
+    
     else if(match_metode != null)
     { 
       // Stack
@@ -348,7 +349,9 @@ export class ChatPage {
         }
       );
     }
+    
     /* ------ Search ------ */
+    
     else if(match_cari != null)
     {
       // Stack
@@ -390,7 +393,9 @@ export class ChatPage {
         );
       }
     }
+    
     /* ------ Cart ------ */
+    
     else if(match_keranjang != null)
     {
       this.stack = [];
@@ -412,7 +417,44 @@ export class ChatPage {
         }
       );
     }
+
+    /* ------ Payment ------ */
+
+    else if(match_bayar != null)
+    {
+      this.stack = [];
+      this.stack.push("bayar");
+
+      if(this.cart.length)
+      {
+        this.chatboxes.push(
+          {
+            container: "chatbox-container-bot",
+            type: "chatbox-bot", 
+            content: "list",
+            header: this.payment_header,
+            footer: this.payment_footer,
+            data: "cart"
+          }
+        );
+
+        // panggil sesuatu
+      }
+      else
+      {
+        this.chatboxes.push(
+          {
+            container: "chatbox-container-bot",
+            type: "chatbox-bot", 
+            content: "text",
+            data: "Tidak ada barang di keranjang"
+          }
+        );
+      }
+    }
+
     /* ------ Add ------ */
+
     else if(match_tambah != null)
     {
       // Get previous command
@@ -425,7 +467,9 @@ export class ChatPage {
       if(prev_command == "alamat") {
         this.addAddress();
       }
+      
       /* --- Method --- */
+      
       else if(prev_command == "metode")
       {
         // Check if user has all payment methods
@@ -445,7 +489,9 @@ export class ChatPage {
           );
         }
       }
+      
       /* --- Search --- */
+      
       else if(prev_command == "cari")
       {
         // Get items that user haven't selected and matches keyword
@@ -461,7 +507,9 @@ export class ChatPage {
           }
         );
       }
+      
       /* --- No valid previous command --- */
+      
       else this.chatboxes.push(
         { 
           container: "chatbox-container-bot",
@@ -471,7 +519,9 @@ export class ChatPage {
         }
       );
     }
+    
     /* --- Delete --- */
+    
     else if(match_hapus != null)
     {
       // Get previous command
@@ -481,6 +531,7 @@ export class ChatPage {
       // Response categorization based on context
 
       /* --- Address --- */
+
       if(prev_command == "alamat")
       {
         // Check if user has any address
@@ -496,7 +547,9 @@ export class ChatPage {
           }
         );
       }
+      
       /* --- Method --- */
+      
       else if(prev_command == "metode")
       {
         // If user has any payment method
@@ -512,7 +565,9 @@ export class ChatPage {
           }
         );
       }
+      
       /* --- Search or cart --- */
+      
       else if(prev_command == "cari" || prev_command == "keranjang")
       {
         // Check if user has selected any item
@@ -528,7 +583,9 @@ export class ChatPage {
           }
         );
       }
+      
       /* --- No valid previous command --- */
+      
       else this.chatboxes.push(
         { 
           container: "chatbox-container-bot",
@@ -538,7 +595,9 @@ export class ChatPage {
         }
       );
     }
+    
     /* --- Invalid command --- */
+    
     else this.chatboxes.push(
       { 
         container: "chatbox-container-bot",
@@ -550,11 +609,11 @@ export class ChatPage {
   }
 
   
-  /* --------------- Alerts --------------- */
+  /* ---------------------------------- Alerts ---------------------------------- */
 
 
 
-  /* ------------ Address  ------------ */ 
+  /* --------------------- Address --------------------- */ 
 
 
   /* --- Validate new address --- */
@@ -735,7 +794,7 @@ export class ChatPage {
   }
 
   
-  /* ------------ Method  ------------ */ 
+  /* --------------------- Method --------------------- */
 
   
   /* --- Get all methods user haven't selected --- */
@@ -913,7 +972,7 @@ export class ChatPage {
   }
 
 
-  /* ------------ Cart and Item  ------------ */ 
+  /* --------------------- Cart and Item --------------------- */
 
 
   /* --- Encode price to Rp standard form --- */
