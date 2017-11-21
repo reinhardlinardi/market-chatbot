@@ -50,14 +50,20 @@ export class ChatPage {
 
   /* ------------ Address and Methods  ------------ */
 
-  public address: string[] = []; // Array of address
-  public method: string[] = []; // Array of payment methods
+  public address: string[] = ["Bandung"]; // Array of address
+  public method: string[] = ["Transfer", "Kartu Kredit"]; // Array of payment methods
   
 
   /* ------------ Cart and details  ------------ */
 
-  public cart: any[] = []; // Cart
-  public cart_detail: any[] = []; // Details for items in cart
+  public cart: any[] = [1]; // Cart
+  public cart_detail: any[] = [{
+    id: 1,
+    keyword: 'kamera',
+    name : 'Kamera',
+    brand: 'Canon',
+    price: 3000000
+  }]; // Details for items in cart
 
 
   /* ------------ Items  ------------ */
@@ -466,25 +472,6 @@ export class ChatPage {
         if(this.address.length && this.method.length)
         {
           this.selectAddress();
-          console.log("Address done");
-
-          if(this.current_address != -1)
-          {
-            this.selectPayment();
-            console.log("Payment done");
-
-            if(this.current_payment != -1)
-            {
-              this.chatboxes.push(
-                {
-                  container: "chatbox-container-bot",
-                  type: "chatbox-bot",
-                  content: "text",
-                  data: "Transaksi berhasil. Terima kasih telah berbelanja!"
-                }
-              );
-            }
-          }
         }
         else
         {
@@ -510,7 +497,6 @@ export class ChatPage {
           }
         );
       }
-      //this.continuePayment();
     }
 
     /* ------ Add ------ */
@@ -691,6 +677,7 @@ export class ChatPage {
     let alert = this.alertCtrl.create(
       {
         title: 'Tambah Alamat Kirim',
+        subTitle: 'Silahkan masukkan alamat pengiriman yang ingin Anda tambah.',
         inputs: [
           {
             name: 'address',
@@ -798,6 +785,7 @@ export class ChatPage {
     let alert = this.alertCtrl.create(
       {
         title: 'Hapus Alamat Kirim',
+        subTitle: 'Silahkan pilih alamat pengiriman yang ingin Anda hapus.',
         inputs: this.getAddress('checkbox'),
         buttons: [
           {
@@ -890,6 +878,7 @@ export class ChatPage {
     let alert = this.alertCtrl.create(
       {
         title: 'Tambah Metode Pembayaran',
+        subTitle: 'Silahkan pilih metode pembayaran yang ingin Anda tambah.',
         inputs: this.getAvailableMethod(),
         buttons: [
           {
@@ -976,6 +965,7 @@ export class ChatPage {
     let alert = this.alertCtrl.create(
       {
         title: 'Hapus Metode Pembayaran',
+        subTitle: 'Silahkan pilih metode pembayaran yang ingin Anda hapus.',
         inputs: this.getMethod('checkbox'),
         buttons: [
           {
@@ -1139,7 +1129,8 @@ export class ChatPage {
   {
     let alert = this.alertCtrl.create(
       {
-        title: 'Tambah Ke Keranjang',
+        title: 'Tambah Barang',
+        subTitle: 'Silahkan pilih barang yang akan ditambahkan ke keranjang.',
         inputs: this.getAvailableItem(key),
         buttons: [
           {
@@ -1206,7 +1197,8 @@ export class ChatPage {
   {
     let alert = this.alertCtrl.create(
       {
-        title: 'Hapus Barang Dari Keranjang',
+        title: 'Hapus Barang',
+        subTitle: 'Silahkan pilih barang yang akan dihapus dari keranjang.',
         inputs: this.getSelectedItem(),
         buttons: [
           {
@@ -1278,7 +1270,8 @@ export class ChatPage {
   {
     let alert = this.alertCtrl.create(
       {
-        title: 'Pilih Alamat Kirim',
+        title: 'Alamat Pengiriman',
+        subTitle: 'Silahkan pilih alamat pengiriman yang Anda inginkan.',
         inputs: this.getAddress('radio'),
         buttons: [
           {
@@ -1290,7 +1283,10 @@ export class ChatPage {
             handler: data => {
 
               // Check if user selected any address
-              if(data != null) this.current_address = data;
+              if(data != null) {
+                this.current_address = data;
+                this.selectPayment();
+              }
               else
               {
                 // Push chatbox
@@ -1326,22 +1322,94 @@ export class ChatPage {
 
   selectPayment()
   {
-    let required = this.alertCtrl.create(
+    /* -- Alert if account detail is not complete -- */
+
+    let transfer_required = this.alertCtrl.create(
       {
-        title: 'Kartu Kredit Kosong',
-        subTitle : 'Data kartu kredit harus diisi',
+        title: 'Transfer',
+        subTitle : 'Data rekening tidak lengkap.',
         buttons : [
           {
-            text: 'Batal',
+            text: 'OK',
             role: 'cancel'
           }
         ]
       }
     );
 
+    /* -- Alert if credit cart detail is not complete -- */
+
+    let credit_required = this.alertCtrl.create(
+      {
+        title: 'Kartu Kredit',
+        subTitle : 'Data kartu kredit tidak lengkap.',
+        buttons : [
+          {
+            text: 'OK',
+            role: 'cancel'
+          }
+        ]
+      }
+    );
+
+    /* -- Prompt for account data -- */
+
+    let transfer = this.alertCtrl.create(
+      {
+        title: 'Data Rekening',
+        subTitle: 'Masukkan data rekening Anda.',
+        inputs: [
+          {
+            name: 'rekening',
+            placeholder: 'Nomor rekening'
+          },
+          {
+            name: 'PIN',
+            placeholder: 'PIN',
+            type: 'password'
+          }
+        ],
+        buttons: [
+          {
+            text: 'Batal',
+            role: 'cancel'
+          },
+          {
+            text: 'Bayar',
+            handler: data => {
+
+              if(data.rekening == "" || data.PIN == "") transfer_required.present();
+              else
+              {
+                this.chatboxes.push(
+                  {
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot",
+                    content: "text",
+                    data: "Transaksi berhasil. Terima kasih telah berbelanja!"
+                  }
+                );
+
+                // Recalculate content dimensions
+                this.content.resize();
+              
+                // Scroll to user's latest chat if content has a scroll
+                if(this.content.scrollHeight > this.content.contentHeight) {
+                  this.content.scrollTo(0, this.content.scrollHeight);
+                }
+              }
+            }
+          }
+        ]
+      }
+    );
+
+    /* -- Prompt for credit card data -- */
+
     let credit = this.alertCtrl.create(
       {
-        title: 'Masukkan Data Kartu Kredit',
+        title: 'Data Kartu Kredit',
+        subTitle: 'Masukkan data kartu kredit Anda.',
         inputs: [
           {
             name: 'kredit',
@@ -1359,19 +1427,41 @@ export class ChatPage {
             role: 'cancel'
           },
           {
-            text: 'Login',
+            text: 'Bayar',
             handler: data => {
 
-              if(data.kredit == "" || data.PIN == "") required.present();
+              if(data.kredit == "" || data.PIN == "") credit_required.present();
+              else
+              {
+                this.chatboxes.push(
+                  {
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot",
+                    content: "text",
+                    data: "Transaksi berhasil. Terima kasih telah berbelanja!"
+                  }
+                );
+
+                // Recalculate content dimensions
+                this.content.resize();
+              
+                // Scroll to user's latest chat if content has a scroll
+                if(this.content.scrollHeight > this.content.contentHeight) {
+                  this.content.scrollTo(0, this.content.scrollHeight);
+                }
+              }
             }
           }
         ]
       }
     );
 
+    /* -- Prompt for payment method selection -- */
+
     let alert = this.alertCtrl.create(
       {
-        title: 'Pilih Metode Pembayaran',
+        title: 'Metode Pembayaran',
+        subTitle: 'Silahkan pilih metode pembayaran yang Anda inginkan.',
         inputs: this.getMethod('radio'),
         buttons: [
           {
@@ -1387,6 +1477,7 @@ export class ChatPage {
                 this.current_payment = data;
 
                 if(this.method[this.current_payment] == "Kartu Kredit") credit.present();
+                else transfer.present();
               }
               else
               {
@@ -1399,14 +1490,6 @@ export class ChatPage {
                     data: "Tidak ada metode pembayaran yang dipilih."
                   }
                 );
-              }
-
-              // Recalculate content dimensions
-              this.content.resize();
-            
-              // Scroll to user's latest chat if content has a scroll
-              if(this.content.scrollHeight > this.content.contentHeight) {
-                this.content.scrollTo(0, this.content.scrollHeight);
               }
             }
           }
