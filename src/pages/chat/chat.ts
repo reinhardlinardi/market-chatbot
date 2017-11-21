@@ -436,7 +436,7 @@ export class ChatPage {
             type: "chatbox-bot", 
             content: "list",
             header: this.payment_header,
-            footer: "\n<b>Total harga : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>\n" + this.payment_footer,
+            footer: "\n<b>Total : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>\n" + this.payment_footer,
             data: "cart"
           }
         );
