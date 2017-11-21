@@ -165,7 +165,7 @@ export class ChatPage {
   item_header: string = "-- Hasil Pencarian --"
                         + "\n\n"
                         + "Hasil pencarian barang :\n";
-  item_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah barang ke keranjang "
+  item_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah barang ke keranjang."
                         + "atau menghapus barang dari keranjang."
                         + "\n\n"
                         + "<b>Tambah :</b>\n"
@@ -183,7 +183,14 @@ export class ChatPage {
   cart_header: string = "-- Keranjang --"
                         + "\n\n"
                         + "Keranjang Anda :\n";
-  cart_footer: string = "";
+  cart_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menghapus barang dari keranjang."
+                        + "\n\n"
+                        + "<b>Hapus :</b>\n"
+                        + "Menghapus barang dari keranjang."
+                        + "\n\n"
+                        + "Contoh penggunaan perintah sebagai berikut :"
+                        + "\n\n"
+                        + "<b>Hapus :</b> <u>Hapus</u>\n";
 
   error: string = "Perintah yang anda masukkan salah. "
                   + "Silahkan coba lagi atau ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
@@ -386,6 +393,9 @@ export class ChatPage {
     /* ------ Cart ------ */
     else if(match_keranjang != null)
     {
+      this.stack = [];
+      this.stack.push("keranjang");
+
       // Get item details
       this.cart_detail = [];
       for(let id of this.cart) this.cart_detail.push(this.getDetailById(id));
@@ -499,6 +509,22 @@ export class ChatPage {
             type: "chatbox-bot",
             content: "text",
             data: "Tidak ada metode pembayaran yang terdaftar." 
+          }
+        );
+      }
+      /* --- Search or cart --- */
+      else if(prev_command == "cari" || prev_command == "keranjang")
+      {
+        // Check if user has selected any item
+        if(this.cart.length) {
+          this.removeItem();
+        }
+        else this.chatboxes.push(
+          { 
+            container: "chatbox-container-bot",
+            type: "chatbox-bot", 
+            content: "text",
+            data: "Tidak ada barang dalam keranjang."
           }
         );
       }
@@ -892,7 +918,8 @@ export class ChatPage {
 
   /* --- Encode price to Rp standard form --- */
 
-  public encodePrice(price: number) {
+  public encodePrice(price: number)
+  {
     let price_string: string = price.toString();
     let result = "";
     
@@ -950,6 +977,30 @@ export class ChatPage {
   }
 
 
+  /* --- Get all item user have selected --- */
+
+  getSelectedItem()
+  {
+    let all: any[] = [];
+    let length = this.cart.length;
+
+    for(let cnt=0; cnt<length; cnt++)
+    {
+      let detail = this.getDetailById(this.cart[cnt]);
+
+      all.push(
+        { 
+          type: 'checkbox',
+          value: cnt,
+          label: detail['brand'] + ", Rp " + this.encodePrice(detail['price'])
+        }
+      );
+    }
+    
+    return all;
+  }
+
+
   /* --- Add new item to cart --- */
 
   addItem(key: string)
@@ -998,6 +1049,69 @@ export class ChatPage {
               // Recalculate content dimensions
               this.content.resize();
             
+              // Scroll to user's latest chat if content has a scroll
+              if(this.content.scrollHeight > this.content.contentHeight) {
+                this.content.scrollTo(0, this.content.scrollHeight);
+              }
+            }
+          }
+        ]
+      }
+    );
+
+    // Show alert
+    alert.present();
+  }
+
+
+  /* --- Delete item from cart --- */
+
+  removeItem()
+  {
+    let alert = this.alertCtrl.create(
+      {
+        title: 'Hapus Barang Dari Keranjang',
+        inputs: this.getSelectedItem(),
+        buttons: [
+          {
+            text: 'Batal',
+            role: 'cancel'
+          },
+          {
+            text: 'Hapus',
+            handler: data => {
+
+              // Delete item from cart
+              for(let index of data) delete this.cart[index];
+              this.cart = this.cart.filter(x => true);
+            
+              // Check if user selected any item
+              if(data.length) {
+                // Push chatbox
+                this.chatboxes.push(
+                  {
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot", 
+                    content: "text",
+                    data: "Barang berhasil dihapus dari keranjang."
+                  }
+                );
+              }
+              else {
+                // Push chatbox
+                this.chatboxes.push(
+                  {
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot", 
+                    content: "text",
+                    data: "Tidak ada barang yang dipilih."
+                  }
+                );
+              }
+
+              // Recalculate content dimensions
+              this.content.resize();
+
               // Scroll to user's latest chat if content has a scroll
               if(this.content.scrollHeight > this.content.contentHeight) {
                 this.content.scrollTo(0, this.content.scrollHeight);
