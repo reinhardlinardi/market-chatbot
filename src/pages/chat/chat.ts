@@ -87,13 +87,7 @@ export class ChatPage {
       brand: 'Sony',
       price: 500000
     }
-  ]; 
-
-  /* ------------ Payment  ------------ */
-
-  current_address: number = -1; // Selected address
-  current_payment: number = -1; // Selected payment method
-  
+  ];
 
   /* -------------------- Constants -------------------- */
 
@@ -243,6 +237,7 @@ export class ChatPage {
     
     // If command.val is not falsy
     if(command.val) {
+
       // Recalculate content dimensions
       this.content.resize();
 
@@ -289,7 +284,6 @@ export class ChatPage {
     let re_alamat = /^\s*alamat\s*$/;
     let re_tambah = /^\s*tambah\s*$/;
     let re_hapus = /^\s*hapus\s*$/;
-    let re_ok = /^\s*ok\s*$/;
     
 
     /* ------ Save regex match ------ */
@@ -302,7 +296,6 @@ export class ChatPage {
     let match_alamat = re_alamat.exec(lower_input);
     let match_tambah = re_tambah.exec(lower_input);
     let match_hapus = re_hapus.exec(lower_input);
-    let match_ok = re_ok.exec(lower_input);
 
 
     /* ------------ Response Categorization  ------------ */
@@ -421,7 +414,7 @@ export class ChatPage {
           type: "chatbox-bot", 
           content: "list",
           header: this.cart_header,
-          footer: this.cart_footer,
+          footer: "\n<b>Total : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>\n" + this.cart_footer,
           data: "cart"
         }
       );
@@ -434,19 +427,7 @@ export class ChatPage {
       this.stack = [];
       this.stack.push("bayar");
 
-      if(this.cart.length)
-      {
-        this.chatboxes.push(
-          {
-            container: "chatbox-container-bot",
-            type: "chatbox-bot", 
-            content: "list",
-            header: this.payment_header,
-            footer: "\n<b>Total : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>\n" + this.payment_footer,
-            data: "cart"
-          }
-        );
-      }
+      if(this.cart.length) this.selectAddress();
       else
       {
         this.chatboxes.push(
@@ -455,45 +436,6 @@ export class ChatPage {
             type: "chatbox-bot", 
             content: "text",
             data: "Tidak ada barang di keranjang."
-          }
-        );
-      }
-    }
-
-    /* ------ OK ------ */
-
-    else if(match_ok != null)
-    {
-      // Get previous command
-      let prev_command: string = this.stack[this.stack.length - 1];
-
-      if(prev_command == "bayar")
-      {
-        if(this.address.length && this.method.length)
-        {
-          this.selectAddress();
-        }
-        else
-        {
-          this.chatboxes.push(
-            {
-              container: "chatbox-container-bot",
-              type: "chatbox-bot",
-              content: "text",
-              data: "Alamat atau metode pembayaran belum terdaftar."
-            }
-          );
-        }
-      }
-      else
-      {
-        this.chatboxes.push(
-          {
-            container: "chatbox-container-bot",
-            type: "chatbox-bot", 
-            content: "text",
-            data: "Anda dapat melakukan konfirmasi pada tahap pembayaran. "
-                  + "Ketik \"Bayar\" untuk lanjut ke tahap pembayaran."
           }
         );
       }
@@ -1325,10 +1267,7 @@ export class ChatPage {
             handler: data => {
 
               // Check if user selected any address
-              if(data != null) {
-                this.current_address = data;
-                this.selectPayment();
-              }
+              if(data != null) this.selectPayment();
               else required.present();
             }
           }
@@ -1491,9 +1430,8 @@ export class ChatPage {
             
               // Check if user selected any payment
               if(data != null) {
-                this.current_payment = data;
 
-                if(this.method[this.current_payment] == "Kartu Kredit") credit.present();
+                if(this.method[data] == "Kartu Kredit") credit.present();
                 else transfer.present();
               }
               else payment_required.present();
