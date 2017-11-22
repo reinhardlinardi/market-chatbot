@@ -93,33 +93,41 @@ export class ChatPage {
 
   /* ------------ Greeting  ------------ */
 
-  greetings: string[] = ["Halo! Selamat datang!",
-                        "Saya adalah chatbot yang akan membantu kamu berberlanja.\n\n"
-                        + "Jika kamu memerlukan bantuan, ketik \"Bantuan\"."];
+  greetings: string[] = [
+    "Halo! Selamat datang!",
+    "Aku adalah chatbot yang akan membantu kamu berbelanja."
+    + "\n\n"
+    + "Jika kamu memerlukan bantuan, ketik \"Bantuan\"."
+  ];
 
 
   /* ------------ Help  ------------ */
 
-  help: string = "-- Bantuan --"
-                  + "\n\n"
-                  + "Anda dapat menggunakan perintah yang tersedia di bawah ini."
-                  + "\n\n"
-                  + "<b>Cari :</b>\n"
-                  + "Mencari barang berdasarkan nama barang.\n"
-                  + "<b>Keranjang :</b>\n"
-                  + "Menampilkan semua barang yang ada di keranjang.\n"
-                  + "<b>Bayar :</b>\n"
-                  + "Melanjutkan ke tahap pembayaran.\n"
-                  + "<b>Metode :</b>\n"
-                  + "Menampilkan atau mengubah metode pembayaran.\n"
-                  + "<b>Alamat :</b>\nMenampilkan atau mengubah alamat kirim."
-                  + "\n\n"
-                  + "Contoh penggunaan perintah sebagai berikut :\n\n"
-                  + "<b>Cari :</b> <u>Cari</u> kamera\n"
-                  + "<b>Keranjang :</b> <u>Keranjang</u>\n"
-                  + "<b>Bayar :</b> <u>Bayar</u>\n"
-                  + "<b>Metode :</b> <u>Metode</u>\n"
-                  + "<b>Alamat :</b> <u>Alamat</u>";
+  helps: string[] = [
+    "<b>Bantuan</b>"
+    + "\n\n"
+    + "<i>Cari</i>\n"
+    + "Mencari barang berdasarkan nama barang."
+    + "\n\n"
+    + "<i>Keranjang</i>\n"
+    + "Menampilkan semua barang yang ada di keranjang."
+    + "\n\n"
+    + "<i>Bayar</i>\n"
+    + "Melanjutkan ke tahap pembayaran."
+    + "\n\n"
+    + "<i>Metode</i>\n"
+    + "Menampilkan atau mengubah metode pembayaran."
+    + "\n\n"
+    + "<i>Alamat</i>\n"
+    + "Menampilkan atau mengubah alamat pengiriman.",
+    "Untuk menggunakan perintah-perintah di atas, kamu dapat memberikan chat seperti ini :"
+    + "\n\n"
+    + "• Aku mau <u>cari</u> <u>kamera</u>\n"
+    + "• Tampilin <u>keranjang</u> donk.\n"
+    + "• Yah, <u>bayar</u> :(\n"
+    + "• Bayar bisa pake <u>metode</u> apa?\n"
+    + "• <u>Alamat</u> ku ada apa aja ya..."
+  ];
 
 
   /* ------------ Address  ------------ */
@@ -298,14 +306,14 @@ export class ChatPage {
 
     /* ------ Regex for string matching ------ */
 
-    let re_bantuan = /^.*bantuan.*$/;
-    let re_cari = /^.*cari\s+(.+)$/;
-    let re_keranjang = /^.*keranjang.*$/;
-    let re_bayar = /^.*bayar.*$/;
-    let re_metode = /^.*metode.*$/;
-    let re_alamat = /^.*alamat.*$/;
-    let re_tambah = /^.*tambah.*$/;
-    let re_hapus = /^.*hapus.*$/;
+    let re_bantuan = /^(?:.*\s+)*bantuan(?:\s+.*)*$/;
+    let re_cari = /^(?:.*\s+)*cari\s+([^\s]+)(?:\s+.*)*$/;
+    let re_keranjang = /^(?:.*\s+)*keranjang(?:\s+.*)*$/;
+    let re_bayar = /^(?:.*\s+)*bayar(?:\s+.*)*$/;
+    let re_metode = /^(?:.*\s+)*metode(?:\s+.*)*$/;
+    let re_alamat = /^(?:.*\s+)*alamat(?:\s+.*)*$/;
+    let re_tambah = /^(?:.*\s+)*tambah(?:\s+.*)*$/;
+    let re_hapus = /^(?:.*\s+)*hapus(?:\s+.*)*$/;
     
 
     /* ------ Save regex match ------ */
@@ -326,14 +334,7 @@ export class ChatPage {
 
     if(match_bantuan != null)
     {
-      this.chatboxes.push(
-        { 
-          container: "chatbox-container-bot",
-          type: "chatbox-bot",
-          content: "text",
-          data: this.help 
-        }
-      );
+      for(let help of this.helps) this.addChat("bot","text",help,"","","");
     }
 
     /* ------ Address ------ */ 
