@@ -160,8 +160,7 @@ export class ChatPage {
     + "Menambahkan metode pembayaran baru."
     + "\n\n"
     + "<i>Hapus</i>\n"
-    + "Menghapus metode pembayaran."
-    + "\n\n",
+    + "Menghapus metode pembayaran.",
     "Contoh penggunaannya :"
     + "\n\n"
     + "• Mau <u>tambah</u> cara bayar dong\n"
@@ -206,7 +205,7 @@ export class ChatPage {
     "Contoh penggunaannya :"
     + "\n\n"
     + "• Gw <u>hapus</u> dulu deh. Kurang menarik barangnya\n"
-    + "• Kayanya sementara keranjang harus <u>kosong</u>, soalnya dompet juga sama haha\n"
+    + "• Kayanya sementara keranjang harus <u>kosong</u>, soalnya dompet juga sama haha"
   ];
 
   /* ------------ Error  ------------ */
