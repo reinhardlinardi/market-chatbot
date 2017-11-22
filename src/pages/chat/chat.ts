@@ -298,14 +298,14 @@ export class ChatPage {
 
     /* ------ Regex for string matching ------ */
 
-    let re_bantuan = /^\s*bantuan\s*$/;
-    let re_cari = /^\s*cari\s*(.+)$/;
-    let re_keranjang = /^\s*keranjang\s*$/;
-    let re_bayar = /^\s*bayar\s*$/;
-    let re_metode = /^\s*metode\s*$/;
-    let re_alamat = /^\s*alamat\s*$/;
-    let re_tambah = /^\s*tambah\s*$/;
-    let re_hapus = /^\s*hapus\s*$/;
+    let re_bantuan = /^.*bantuan.*$/;
+    let re_cari = /^.*cari\s+(.+)$/;
+    let re_keranjang = /^.*keranjang.*$/;
+    let re_bayar = /^.*bayar.*$/;
+    let re_metode = /^.*metode.*$/;
+    let re_alamat = /^.*alamat.*$/;
+    let re_tambah = /^.*tambah.*$/;
+    let re_hapus = /^.*hapus.*$/;
     
 
     /* ------ Save regex match ------ */
