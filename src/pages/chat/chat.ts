@@ -50,20 +50,14 @@ export class ChatPage {
 
   /* ------------ Address and Methods  ------------ */
 
-  public address: string[] = ["Bandung"]; // Array of address
-  public method: string[] = ["Transfer", "Kartu Kredit"]; // Array of payment methods
+  public address: string[] = []; // Array of address
+  public method: string[] = []; // Array of payment methods
   
 
   /* ------------ Cart and details  ------------ */
 
-  public cart: any[] = [1]; // Cart
-  public cart_detail: any[] = [{
-    id: 1,
-    keyword: 'kamera',
-    name : 'Kamera',
-    brand: 'Canon',
-    price: 3000000
-  }]; // Details for items in cart
+  public cart: any[] = []; // Cart
+  public cart_detail: any[] = []; // Details for items in cart
 
 
   /* ------------ Items  ------------ */
@@ -85,7 +79,7 @@ export class ChatPage {
       keyword: 'kamera',
       name: 'Kamera',
       brand: 'Sony',
-      price: 500000
+      price: 2000000
     }
   ];
 
@@ -97,7 +91,7 @@ export class ChatPage {
     "Halo! Selamat datang!",
     "Aku adalah chatbot yang akan membantu kamu berbelanja."
     + "\n\n"
-    + "Jika kamu memerlukan bantuan, ketik \"Bantuan\"."
+    + "Jika kamu memerlukan bantuan, ketik \"Bantuan\""
   ];
 
 
@@ -120,7 +114,7 @@ export class ChatPage {
     + "\n\n"
     + "<i>Alamat</i>\n"
     + "Menampilkan atau mengubah alamat pengiriman.",
-    "Untuk menggunakan perintah-perintah di atas, kamu dapat memberikan chat seperti ini :"
+    "Untuk menggunakan perintah-perintah di atas, kamu dapat mengirimkan chat seperti ini :"
     + "\n\n"
     + "• Aku mau <u>cari</u> <u>kamera</u>\n"
     + "• Tampilin <u>keranjang</u> donk.\n"
@@ -132,88 +126,92 @@ export class ChatPage {
 
   /* ------------ Address  ------------ */
 
-  address_header: string = "-- Alamat Kirim --"
-                            + "\n\n"
-                            + "Daftar alamat kirim Anda :"
-                            + "\n\n";
-  address_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah atau menghapus "
-                            + "alamat kirim."
-                            + "\n\n"
-                            + "<b>Tambah :</b>\n"
-                            + "Menambahkan alamat kirim baru. "
-                            + "Jika alamat sudah terdaftar, alamat tidak akan ditambahkan.\n"
-                            + "<b>Hapus :</b>\n"
-                            + "Menghapus alamat kirim."
-                            + "\n\n"
-                            + "Contoh penggunaan perintah sebagai berikut :"
-                            + "\n\n"
-                            + "<b>Tambah :</b> <u>Tambah</u>\n"
-                            + "<b>Hapus :</b> <u>Hapus</u>";
+  addr: string[] = [
+    "<b>Alamat Pengiriman</b>"
+    + "\n\n"
+    + "Daftar alamat pengiriman yang kamu punya :"
+    + "\n\n",
+    "Kamu dapat menambah atau menghapus alamat pengiriman dengan perintah-perintah di bawah ini."
+    + "\n\n"
+    + "<i>Tambah</i>\n"
+    + "Menambahkan alamat pengiriman baru. "
+    + "Jika alamat sudah terdaftar, alamat tidak akan ditambahkan."
+    + "\n\n"
+    + "<i>Hapus</i>\n"
+    + "Menghapus alamat pengiriman.",
+    "Contoh penggunaannya :"
+    + "\n\n"
+    + "• Harus <u>tambah</u> alamat baru nih. Hmmm\n"
+    + "• Mau <u>hapus</u> alamat ah.."
+  ];
 
 
   /* ------------ Method  ------------ */
 
-  method_header: string = "-- Metode Pembayaran --"
-                            + "\n\n"
-                            + "Daftar metode pembayaran Anda :"
-                            + "\n\n";
-  method_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah atau menghapus "
-                            + "metode pembayaran."
-                            + "\n\n"
-                            + "<b>Tambah :</b>\n"
-                            + "Menambahkan metode pembayaran baru.\n"
-                            + "<b>Hapus :</b>\n"
-                            + "Menghapus metode pembayaran."
-                            + "\n\n"
-                            + "Contoh penggunaan perintah sebagai berikut :"
-                            + "\n\n"
-                            + "<b>Tambah :</b> <u>Tambah</u>\n"
-                            + "<b>Hapus :</b> <u>Hapus</u>";
+  methods: string[] = [
+    "<b>Metode Pembayaran</b>"
+    + "\n\n"
+    + "Daftar metode pembayaran yang kamu punya :"
+    + "\n\n",
+    "Kamu dapat menambah atau menghapus metode pembayaran dengan perintah-perintah di bawah ini."
+    + "metode pembayaran."
+    + "\n\n"
+    + "<i>Tambah</i>\n"
+    + "Menambahkan metode pembayaran baru."
+    + "\n\n"
+    + "<i>Hapus</i>\n"
+    + "Menghapus metode pembayaran."
+    + "\n\n",
+    "Contoh penggunaannya :"
+    + "\n\n"
+    + "• Mau <u>tambah</u> cara bayar dong\n"
+    + "• Bisa <u>hapus</u> metode pembayaran?"
+  ];
 
 
   /* ------------ Item  ------------ */
 
-  item_header: string = "-- Hasil Pencarian --"
-                        + "\n\n"
-                        + "Hasil pencarian barang :\n";
-  item_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menambah barang ke keranjang."
-                        + "atau menghapus barang dari keranjang."
-                        + "\n\n"
-                        + "<b>Tambah :</b>\n"
-                        + "Menambahkan barang ke keranjang.\n"
-                        + "<b>Hapus :</b>\n"
-                        + "Menghapus barang dari keranjang."
-                        + "\n\n"
-                        + "Contoh penggunaan perintah sebagai berikut :"
-                        + "\n\n"
-                        + "<b>Tambah :</b> <u>Tambah</u>\n"
-                        + "<b>Hapus :</b> <u>Hapus</u>";
+  items: string[] = [
+    "<b>Hasil Pencarian</b>"
+    + "\n\n"
+    + "Hasil pencarian " + this.current_item + " :"
+    + "\n",
+    "Kamu dapat menggunakan perintah di bawah ini untuk menambah atau menghapus barang pada keranjang."
+    + "\n\n"
+    + "<i>Tambah</i>\n"
+    + "Menambahkan barang ke keranjang."
+    + "\n\n"
+    + "<i>Hapus</i>\n"
+    + "Menghapus barang dari keranjang.",
+    "Contoh penggunaannya :"
+    + "\n\n"
+    + "• Mau <u>tambah</u> dong. Hehehe\n"
+    + "• Mahal juga :( <u>hapus</u> deh"
+  ];
 
   /* ------------ Cart  ------------ */
 
-  cart_header: string = "-- Keranjang --"
-                        + "\n\n"
-                        + "Keranjang Anda :\n";
-  cart_footer: string = "\nAnda dapat menggunakan perintah di bawah ini untuk menghapus barang dari keranjang."
-                        + "\n\n"
-                        + "<b>Hapus :</b>\n"
-                        + "Menghapus barang dari keranjang."
-                        + "\n\n"
-                        + "Contoh penggunaan perintah sebagai berikut :"
-                        + "\n\n"
-                        + "<b>Hapus :</b> <u>Hapus</u>";
-
-  /* ------------ Payment  ------------ */
-
-  payment_header: string = "-- Pembayaran --"
-                            + "\n\n"
-                            + "Keranjang Anda :\n";
-  payment_footer: string = "\nKetik \"OK\" untuk melanjutkan.";
+  carts: string[] = [
+    "-- Keranjang --"
+    + "\n\n"
+    + "Barang pada keranjang kamu :"
+    + "\n",
+    "Kamu dapat menggunakan perintah di bawah ini untuk menghapus barang dari keranjang."
+    + "\n\n"
+    + "<i>Hapus</i>\n"
+    + "Menghapus barang dari keranjang."
+    + "\n\n"
+    + "<i>Kosong</i>\n"
+    + "Mengosongkan keranjang.",
+    "Contoh penggunaannya :"
+    + "\n\n"
+    + "• Gw <u>hapus</u> dulu deh. Kurang menarik barangnya\n"
+    + "• Kayanya sementara keranjang harus <u>kosong</u>, soalnya dompet juga sama haha\n"
+  ];
 
   /* ------------ Error  ------------ */
 
-  error: string = "Perintah yang anda masukkan salah. "
-                  + "Silahkan coba lagi atau ketik \"Bantuan\" untuk melihat perintah apa saja yang tersedia.";
+  error: string = "Maaf, aku tidak mengerti apa yang kamu maksud. Jika kamu memerlukan bantuan, ketik \"Bantuan\"";
 
 
   /* ---------------------------- Methods ---------------------------- */
@@ -306,114 +304,33 @@ export class ChatPage {
 
     /* ------ Regex for string matching ------ */
 
-    let re_bantuan = /^(?:.*\s+)*bantuan(?:\s+.*)*$/;
-    let re_cari = /^(?:.*\s+)*cari\s+([^\s]+)(?:\s+.*)*$/;
-    let re_keranjang = /^(?:.*\s+)*keranjang(?:\s+.*)*$/;
-    let re_bayar = /^(?:.*\s+)*bayar(?:\s+.*)*$/;
-    let re_metode = /^(?:.*\s+)*metode(?:\s+.*)*$/;
-    let re_alamat = /^(?:.*\s+)*alamat(?:\s+.*)*$/;
-    let re_tambah = /^(?:.*\s+)*tambah(?:\s+.*)*$/;
-    let re_hapus = /^(?:.*\s+)*hapus(?:\s+.*)*$/;
+    let re_tambah = /^(?:.*\s+)*tambah[,\.?!]?(?:\s+.*)*$/;
+    let re_hapus = /^(?:.*\s+)*hapus[,\.?!]?(?:\s+.*)*$/;
+    let re_bantuan = /^(?:.*\s+)*bantuan[,\.?!]?(?:\s+.*)*$/;
+    let re_cari = /^(?:.*\s+)*cari\s+([^\s]+)[,\.?!]?(?:\s+.*)*$/;
+    let re_keranjang = /^(?:.*\s+)*keranjang[,\.?!]?(?:\s+.*)*$/;
+    let re_bayar = /^(?:.*\s+)*bayar[,\.?!]?(?:\s+.*)*$/;
+    let re_metode = /^(?:.*\s+)*metode[,\.?!]?(?:\s+.*)*$/;
+    let re_alamat = /^(?:.*\s+)*alamat[,\.?!]?(?:\s+.*)*$/;
     
 
     /* ------ Save regex match ------ */
 
+    let match_tambah = re_tambah.exec(lower_input);
+    let match_hapus = re_hapus.exec(lower_input);
     let match_bantuan = re_bantuan.exec(lower_input);
     let match_cari = re_cari.exec(lower_input);
     let match_keranjang = re_keranjang.exec(lower_input);
     let match_bayar = re_bayar.exec(lower_input);
     let match_metode = re_metode.exec(lower_input);
     let match_alamat = re_alamat.exec(lower_input);
-    let match_tambah = re_tambah.exec(lower_input);
-    let match_hapus = re_hapus.exec(lower_input);
 
 
     /* ------------ Response Categorization  ------------ */
 
-    /* ------ Help ------ */
-
-    if(match_bantuan != null)
-    {
-      for(let help of this.helps) this.addChat("bot","text",help,"","","");
-    }
-
-    /* ------ Address ------ */ 
-
-    else if(match_alamat != null)
-    {
-      // Stack 
-      this.setStack("alamat");
-      
-      // Push chatbox
-      this.addChat("bot","list","address","",this.address_header,this.address_footer);
-    }
-    
-    /* ------ Method ------ */
-    
-    else if(match_metode != null)
-    { 
-      // Stack
-      this.setStack("metode");
-
-      // Push chatbox
-      this.addChat("bot","list","address","",this.method_header,this.method_footer);
-    }
-    
-    /* ------ Search ------ */
-    
-    else if(match_cari != null)
-    {
-      // Stack
-      this.setStack("cari");
-
-      // Get keyword
-      let item:string = match_cari[1].toLowerCase();
-      this.all_item = this.getAllItem(item);
-
-      // Check if keyword matches any item
-      if(this.all_item.length)
-      { 
-        this.current_item = item;
-        this.addChat("bot","list","item",item,this.item_header,this.item_footer);
-      }
-      else 
-      {
-        this.current_item = "";
-        this.addChat("bot","text","Maaf, barang yang Anda cari tidak ditemukan.","","","");
-      }
-    }
-    
-    /* ------ Cart ------ */
-    
-    else if(match_keranjang != null)
-    {
-      // Stack
-      this.setStack("keranjang");
-
-      // Push chatbox
-      this.addChat("bot","list","cart","",this.cart_header,"\n<b>Total : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>\n" + this.cart_footer);
-    }
-
-    /* ------ Payment ------ */
-
-    else if(match_bayar != null)
-    {
-      // Stack
-      this.setStack("bayar");
-
-      // If user has any item, address, and payment method
-      if(this.cart.length && this.address.length && this.method.length) this.selectAddress();
-      else
-      {
-        if(!this.cart.length) this.addChat("bot","text","Anda belum memilih barang.","","","");
-        else if(!this.address.length) this.addChat("bot","text","Anda belum memiliki alamat pengiriman.","","","");
-        else this.addChat("bot","text","Anda belum memiliki metode pembayaran.","","","");
-      }
-    }
-
     /* ------ Add ------ */
 
-    else if(match_tambah != null)
+    if(match_tambah != null)
     {
       // Response categorization based on context
 
@@ -426,7 +343,10 @@ export class ChatPage {
       {
         // Check if user has all payment methods
         if(this.method.length != 2) this.addMethod();
-        else this.addChat("bot","text","Semua metode pembayaran sudah terdaftar.","","","");
+        else {
+          let msg : string = "Kamu sudah memiliki semua metode pembayaran! Keren";
+          this.addChat("bot","text",msg,"","","");
+        }
       }
       
       /* --- Search --- */
@@ -435,12 +355,18 @@ export class ChatPage {
       {
         // Get items that user haven't selected and matches keyword
         if(this.getAvailableItem(this.current_item).length) this.addItem(this.current_item);
-        else this.addChat("bot","text","Semua barang sudah dimasukkan ke keranjang.","","","");
+        else {
+          let msg : string = "Semua barang dengan kategori " + this.current_item + " sudah kamu masukkan ke keranjang! Yeay";
+          this.addChat("bot","text",msg,"","","");
+        }
       }
       
       /* --- No valid previous command --- */
       
-      else this.addChat("bot","text","Tidak ada data yang dapat ditambahkan.","","","");
+      else {
+        let msg : string = "Maaf, aku tidak mengerti data apa yang mau kamu tambahkan";
+        this.addChat("bot","text",msg,"","","");
+      }
     }
     
     /* --- Delete --- */
@@ -455,7 +381,10 @@ export class ChatPage {
       {
         // Check if user has any address
         if(this.address.length) this.removeAddress();
-        else this.addChat("bot","text","Tidak ada alamat kirim yang terdaftar.","","","");
+        else {
+          let msg : string = "Maaf, kamu tidak memiliki alamat pengiriman yang terdaftar";
+          this.addChat("bot","text",msg,"","","");
+        }
       }
 
       /* --- Method --- */
@@ -464,7 +393,10 @@ export class ChatPage {
       {
         // If user has any payment method
         if(this.method.length)  this.removeMethod();
-        else this.addChat("bot","text","Tidak ada metode pembayaran yang terdaftar.","","","");
+        else {
+          let msg : string = "Maaf, kamu tidak memiliki metode pembayaran";
+          this.addChat("bot","text",msg,"","","");
+        }
       }
       
       /* --- Search or cart --- */
@@ -473,12 +405,117 @@ export class ChatPage {
       {
         // Check if user has selected any item
         if(this.cart.length) this.removeItem();
-        else this.addChat("bot","text","Tidak ada barang dalam keranjang.","","","");
+        else {
+          let msg : string = "Maaf, kamu tidak memiliki barang apapun di keranjang";
+          this.addChat("bot","text",msg,"","","");
+        }
       }
       
       /* --- No valid previous command --- */
       
-      else this.addChat("bot","text","Tidak ada data yang dapat dihapus.","","","");
+      else {
+        let msg : string = "Maaf, aku tidak mengerti data apa yang mau kamu hapus";
+        this.addChat("bot","text",msg,"","","");
+      }
+    }
+
+    /* ------ Help ------ */
+
+    else if(match_bantuan != null)
+    {
+      for(let help of this.helps) this.addChat("bot","text",help,"","","");
+    }
+
+    /* ------ Address ------ */ 
+
+    else if(match_alamat != null)
+    {
+      // Stack 
+      this.setStack("alamat");
+      
+      // Push chatbox
+      this.addChat("bot","list","address","",this.addr[0],"");
+      let length = this.addr.length;
+
+      for(let idx=1; idx<length; idx++) this.addChat("bot","text",this.addr[idx],"","","");
+    }
+    
+    /* ------ Method ------ */
+    
+    else if(match_metode != null)
+    { 
+      // Stack
+      this.setStack("metode");
+
+      // Push chatbox
+      this.addChat("bot","list","method","",this.methods[0],"");
+      let length = this.methods.length;
+      
+      for(let idx=1; idx<length; idx++) this.addChat("bot","text",this.methods[idx],"","","");
+    }
+    
+    /* ------ Search ------ */
+    
+    else if(match_cari != null)
+    {
+      // Stack
+      this.setStack("cari");
+
+      // Get keyword
+      let item: string = match_cari[1].toLowerCase();
+      this.all_item = this.getAllItem(item);
+
+      // Check if keyword matches any item
+      if(this.all_item.length)
+      { 
+        this.current_item = item;
+        this.addChat("bot","list","item",item,this.items[0],"");
+        let length = this.items.length;
+        
+        for(let idx=1; idx<length; idx++) this.addChat("bot","text",this.items[idx],"","","");
+      }
+      else 
+      {
+        this.current_item = "";
+        
+        let msg : string = "Maaf, aku tidak dapat menemukan barang yang kamu cari"
+        this.addChat("bot","text",msg,"","","");
+      }
+    }
+    
+    /* ------ Cart ------ */
+    
+    else if(match_keranjang != null)
+    {
+      // Stack
+      this.setStack("keranjang");
+
+      // Push chatbox
+      this.addChat("bot","list","cart","",this.carts[0],"\n<b>Total : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>");
+      let length = this.carts.length;
+      
+      for(let idx=1; idx<length; idx++) this.addChat("bot","text",this.carts[idx],"","","");
+    }
+
+    /* ------ Payment ------ */
+
+    else if(match_bayar != null)
+    {
+      // Stack
+      this.setStack("bayar");
+
+      // If user has any item, address, and payment method
+      if(this.cart.length && this.address.length && this.method.length) this.selectAddress();
+      else
+      {
+        let msg = "";
+
+        if(!this.cart.length) msg = "Kamu belum memilih barang apapun.\n\nKamu dapat menambahkan barang pada menu \"cari\"";
+        else if(!this.address.length) msg = "Kamu belum memiliki alamat pengiriman.\n\nKamu dapat menambahkan alamat pengiriman pada menu \"alamat\"";
+        else msg = "Kamu belum memiliki metode pembayaran.\n\nKamu dapat menambahkan metode pembayaran pada menu \"metode\"";
+
+        this.addChat("bot","text",msg,"","","");
+      }
     }
     
     /* --- Invalid command --- */
