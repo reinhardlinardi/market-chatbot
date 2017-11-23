@@ -173,7 +173,7 @@ export class ChatPage {
   items: string[] = [
     "<b>Hasil Pencarian</b>"
     + "\n\n"
-    + "Hasil pencarian " + this.current_item + " :"
+    + "Hasil pencarian :"
     + "\n",
     "Kamu dapat menggunakan perintah di bawah ini untuk menambah atau menghapus barang pada keranjang."
     + "\n\n"
@@ -191,9 +191,9 @@ export class ChatPage {
   /* ------------ Cart  ------------ */
 
   carts: string[] = [
-    "-- Keranjang --"
+    "<b>Keranjang</b>"
     + "\n\n"
-    + "Barang pada keranjang kamu :"
+    + "Barang pada keranjangmu :"
     + "\n",
     "Kamu dapat menggunakan perintah di bawah ini untuk menghapus barang dari keranjang."
     + "\n\n"
@@ -311,6 +311,7 @@ export class ChatPage {
     let re_bayar = /^(?:.*\s+)*bayar[,\.?!]?(?:\s+.*)*$/;
     let re_metode = /^(?:.*\s+)*metode[,\.?!]?(?:\s+.*)*$/;
     let re_alamat = /^(?:.*\s+)*alamat[,\.?!]?(?:\s+.*)*$/;
+    let re_kosong = /^(?:.*\s+)*kosong[,\.?!]?(?:\s+.*)*$/;
     
 
     /* ------ Save regex match ------ */
@@ -323,6 +324,7 @@ export class ChatPage {
     let match_bayar = re_bayar.exec(lower_input);
     let match_metode = re_metode.exec(lower_input);
     let match_alamat = re_alamat.exec(lower_input);
+    let match_kosong = re_kosong.exec(lower_input);
 
 
     /* ------------ Response Categorization  ------------ */
@@ -490,7 +492,7 @@ export class ChatPage {
       this.setStack("keranjang");
 
       // Push chatbox
-      this.addChat("bot","list","cart","",this.carts[0],"\n<b>Total : Rp " + this.encodePrice(this.getTotalPrice()) + "</b>");
+      this.addChat("bot","list","cart","",this.carts[0],"");
       let length = this.carts.length;
       
       for(let idx=1; idx<length; idx++) this.addChat("bot","text",this.carts[idx],"","","");
@@ -513,6 +515,27 @@ export class ChatPage {
         else if(!this.address.length) msg = "Kamu belum memiliki alamat pengiriman.\n\nKamu dapat menambahkan alamat pengiriman pada menu \"alamat\"";
         else msg = "Kamu belum memiliki metode pembayaran.\n\nKamu dapat menambahkan metode pembayaran pada menu \"metode\"";
 
+        this.addChat("bot","text",msg,"","","");
+      }
+    }
+
+    /* ------ Empty cart ------ */
+    else if(match_kosong != null)
+    {
+      if(this.prevStack("keranjang"))
+      {
+        while(this.cart.length)
+        {
+          this.cart.pop();
+          this.cart_detail.pop();
+        }
+
+        let msg : string = "Keranjang berhasil dikosongkan!";
+        this.addChat("bot","text",msg,"","","");
+      }
+      else
+      {
+        let msg : string = "Maaf, kamu harus masuk ke menu keranjang untuk mengosongkan keranjang";
         this.addChat("bot","text",msg,"","","");
       }
     }
@@ -913,7 +936,7 @@ export class ChatPage {
 
   /* --- Get total price --- */
 
-  getTotalPrice(): number
+  public getTotalPrice(): number
   {
     let total: number = 0;
     let length = this.cart_detail.length;

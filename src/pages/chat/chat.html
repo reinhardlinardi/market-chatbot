@@ -79,6 +79,7 @@
                   <!-- Print without data binding -->
                   <div class="chat-content"><br/>{{ idx+1 }})<br/>Barang: {{ detail['name'] }}<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ encodePrice(detail['price']) }}</div>
                 </ng-container>
+                <div class="chat-content"><br/><b>Total: Rp {{ encodePrice(getTotalPrice()) }}</b></div>
               </ng-container>
               <!-- If nothing -->
               <ng-container *ngIf="!cart_detail.length">
