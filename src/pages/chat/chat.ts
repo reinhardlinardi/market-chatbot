@@ -124,7 +124,10 @@ export class ChatPage {
     + "Menampilkan atau mengubah metode pembayaran."
     + "\n\n"
     + "<i>Alamat</i>\n"
-    + "Menampilkan atau mengubah alamat pengiriman.",
+    + "Menampilkan atau mengubah alamat pengiriman."
+    + "\n\n"
+    + "<i>Lacak</i>\n"
+    + "Melacak status barang yang sedang dikirim",
     "Untuk menggunakan perintah-perintah di atas, kamu dapat mengirimkan chat seperti ini :"
     + "\n\n"
     + "• Aku mau <u>cari</u> <u>kamera</u>\n"
@@ -323,6 +326,7 @@ export class ChatPage {
     let re_metode = /^(?:.*\s+)*metode[,\.?!]?(?:\s+.*)*$/;
     let re_alamat = /^(?:.*\s+)*alamat[,\.?!]?(?:\s+.*)*$/;
     let re_kosong = /^(?:.*\s+)*kosong[,\.?!]?(?:\s+.*)*$/;
+    let re_lacak = /^(?:.*\s+)*lacak[,\.?!]?(?:\s+.*)*$/;
     
 
     /* ------ Save regex match ------ */
@@ -336,6 +340,7 @@ export class ChatPage {
     let match_metode = re_metode.exec(lower_input);
     let match_alamat = re_alamat.exec(lower_input);
     let match_kosong = re_kosong.exec(lower_input);
+    let match_lacak = re_lacak.exec(lower_input);
 
 
     /* ------------ Response Categorization  ------------ */
@@ -552,7 +557,14 @@ export class ChatPage {
         this.addChat("bot","text",msg,"","","");
       }
     }
-    
+
+    /* ------ Tracking ------ */
+
+    else if(match_lacak != null)
+    {
+      this.addChat("bot","text","<b>Hasil Pelacakan</b>\n\nBarang yang kamu pesan memiliki status <u>PAID</u>.\n\nDalam waktu 3 hari, paket kamu akan sampai :D","","","");
+    } 
+
     /* --- Invalid command --- */
     
     else this.addChat("bot","text",this.error,"","","");
