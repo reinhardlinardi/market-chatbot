@@ -72,7 +72,8 @@ export class ChatPage {
       keyword: 'kamera',
       name : 'Kamera',
       brand: 'Canon',
-      price: 3000000
+      price: 3000000,
+      img: 'assets/imgs/s4.png'
     },
     {
       id: 2,

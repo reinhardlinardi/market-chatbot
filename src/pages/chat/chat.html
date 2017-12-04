@@ -62,7 +62,7 @@
                 <!-- For all items -->
                 <ng-container *ngFor="let detail of all_item; let idx=index">
                   <!-- Print without data binding -->
-                  <div class="chat-content"><br/>{{ idx+1 }})<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ encodePrice(detail['price']) }}</div>
+                  <div class="chat-content"><br/>{{ idx+1 }})<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ encodePrice(detail['price']) }}<br/><ion-img style="width: 150px; height: 220px; background: transparent !important;" src="{{ detail['img'] }}"></ion-img></div>
                 </ng-container>
               </ng-container>
               <!-- If nothing -->
@@ -77,7 +77,7 @@
                 <!-- For all items -->
                 <ng-container *ngFor="let detail of cart_detail; let idx=index">
                   <!-- Print without data binding -->
-                  <div class="chat-content"><br/>{{ idx+1 }})<br/>Barang: {{ detail['name'] }}<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ encodePrice(detail['price']) }}</div>
+                  <div class="chat-content"><br/>{{ idx+1 }})<br/>Barang: {{ detail['name'] }}<br/>Merk: {{ detail['brand'] }}<br/>Harga: Rp {{ encodePrice(detail['price']) }}</div> 
                 </ng-container>
                 <div class="chat-content"><br/><b>Total: Rp {{ encodePrice(getTotalPrice()) }}</b></div>
               </ng-container>
