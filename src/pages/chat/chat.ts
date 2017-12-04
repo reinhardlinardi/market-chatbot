@@ -80,8 +80,19 @@ export class ChatPage {
       name: 'Kamera',
       brand: 'Sony',
       price: 2000000
+    },
+    {
+      id: 3,
+      keyword: 'hp',
+      name: 'Handphone',
+      brand: 'Samsung',
+      price: 5000000
     }
   ];
+
+  /* ------------ Recommendation  ------------ */
+
+  camera_search: boolean = true;
 
   /* -------------------- Constants -------------------- */
 
@@ -355,7 +366,9 @@ export class ChatPage {
       else if(this.prevStack("cari"))
       {
         // Get items that user haven't selected and matches keyword
-        if(this.getAvailableItem(this.current_item).length) this.addItem(this.current_item);
+        if(this.getAvailableItem(this.current_item).length) {
+          this.addItem(this.current_item);
+        }
         else {
           let msg : string = "Semua barang dengan kategori " + this.current_item + " sudah kamu masukkan ke keranjang! Yeay";
           this.addChat("bot","text",msg,"","","");
@@ -1060,7 +1073,26 @@ export class ChatPage {
         buttons : [
           {
             text: 'OK',
-            role: 'cancel'
+            role: 'cancel',
+            handler: () => {
+              if(this.current_item == 'kamera' && this.camera_search)
+              {
+                this.camera_search = false;
+    
+                this.chatboxes.push(
+                  {
+                    container: "chatbox-container-bot",
+                    type: "chatbox-bot",
+                    content: "text",
+                    data: "<b>Rekomendasi</b>\n\nDapatkan HP Samsung terbaru kami dengan harga spesial!\n\nGunakan keyword <u>HP</u> pada menu pencarian :)"
+                  }
+                );
+
+                if(this.content.scrollHeight > this.content.contentHeight) {
+                  this.content.scrollTo(0, this.content.scrollHeight);
+                }
+              }
+            }
           }
         ]
       }
